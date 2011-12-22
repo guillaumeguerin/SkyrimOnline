@@ -52,3 +52,5 @@ THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEP
 #pragma warning( disable : 4244 )
 #pragma warning( disable : 4996 )
 #pragma warning( disable : 4355 )
+
+#include "Hipolipolopigus.h"

@@ -1,0 +1,7 @@
+
+Client/Client.opensdf
+Client/Client.sdf
+Client/Obj/*
+Client/ipch/*
+Client/SkyNet/obj/*
+Server/Obj/*
