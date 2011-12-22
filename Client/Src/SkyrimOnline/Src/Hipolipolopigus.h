@@ -11,6 +11,7 @@
 #define							SkyNet_Globals			L"globals"
 #define							SkyNet_Check			L"Core_Check"
 #define							SkyNet_Main				L"Core_Main"
+#define							SkyNet_PipeStart		"\\\\.\\pipe\\"
 
 using namespace					mscorlib;
 
@@ -20,21 +21,6 @@ ICorRuntimeHost					*pCorRuntimeHost = NULL;
 IUnknownPtr						spAppDomainThunk = NULL;
 _AppDomainPtr					spDefaultAppDomain = NULL;
 ICLRMetaHost					*pMetaHost = NULL;
-
-class sPipe
-{
-public:
-	sPipe(LPTSTR Name)
-	{
-
-	}
-}
-
-void Hipo_MakeHostPipe(LPTSTR Name)
-{
-	sPipe p = sPipe(Name);
-	
-}
 
 int CLR_Execute(LPCWSTR Assembly, LPCWSTR Class, LPCWSTR Method, LPCWSTR Argument)
 {

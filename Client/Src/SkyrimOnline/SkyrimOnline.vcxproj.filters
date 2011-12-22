@@ -117,6 +117,9 @@
     <ClInclude Include="Src\Hipolipolopigus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sPipe.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\common\plugin.cpp">
@@ -198,6 +201,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Src\Game\AssetManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sPipe.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
