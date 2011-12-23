@@ -16,7 +16,6 @@
     <ClInclude Include="Src\DataBase\DatabasePimplData_i.h" />
     <ClInclude Include="Src\DataBase\Exception.h" />
     <ClInclude Include="Src\DataBase\macros.h" />
-    <ClInclude Include="Src\DataBase\otlv4.h" />
     <ClInclude Include="Src\DataBase\Query.h" />
     <ClInclude Include="Src\DataBase\QueryPimplData_i.h" />
     <ClInclude Include="Src\DataBase\ScopedTransaction.h" />

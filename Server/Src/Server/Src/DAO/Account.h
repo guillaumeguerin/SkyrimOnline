@@ -22,8 +22,8 @@ namespace Skyrim{
 			try
 			{
 				std::ostringstream oss;
-				oss << "SELECT ID, user_pass, user_login, user_nicename, meta_value FROM wp_users INNER JOIN wp_usermeta ON ID=user_id WHERE meta_key='wp_user_level' AND user_login='" << stringSQLSafe(mEntity._user)
-					<< "' AND user_pass=MD5('" << stringSQLSafe(mEntity._pass) << "')";
+				oss << "SELECT ID, user_pass, user_login, user_nicename, meta_value FROM wp_users INNER JOIN wp_usermeta ON ID=user_id WHERE meta_key='wp_user_level' AND user_login='" << stringSQLSafe(mEntity.User)
+					<< "' AND user_pass=MD5('" << stringSQLSafe(mEntity.Pass) << "')";
 
 				SimpleDB::Query query(pDatabase);
 				SimpleDB::StringColumn pass(33), user(61), nicename(61);
@@ -34,11 +34,11 @@ namespace Skyrim{
 
 				if(query.fetchRow())
 				{
-					mEntity._pass = pass.value();
-					mEntity._user = user.value();
-					mEntity._id = id.value();
-					mEntity._level = level.value();
-					mEntity._nicename = nicename.value();
+					mEntity.Pass = pass.value();
+					mEntity.User = user.value();
+					mEntity.Id = id.value();
+					mEntity.Level = level.value();
+					mEntity.Nicename = nicename.value();
 
 					/*std::ostringstream charS;
 					charS << "SELECT server_id FROM other_personnages WHERE account='" << mEntity._id << "'";

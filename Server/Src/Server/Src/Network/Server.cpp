@@ -173,11 +173,16 @@ namespace Skyrim
 			{
 				world->Add(pPlayer);
 			}
+			else
+				pPlayer->Close();
 		}
 		//---------------------------------------------------------------------
 		void Server::AddShard(Game::World* pWorld)
 		{
-			mWorlds[pWorld->GetName()] = pWorld;
+			if(!mWorlds[pWorld->GetName()])
+				mWorlds[pWorld->GetName()] = pWorld;
+			else
+				delete pWorld;
 		}
 		//---------------------------------------------------------------------
 	}

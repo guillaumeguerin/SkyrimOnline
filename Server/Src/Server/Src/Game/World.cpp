@@ -141,7 +141,7 @@ namespace Skyrim{
 		//---------------------------------------------------------------------
 		unsigned int World::Count()
 		{
-			return mSessions.size();
+			return static_cast<unsigned int>(mSessions.size());
 		}
 		//---------------------------------------------------------------------
 	}
