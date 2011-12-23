@@ -87,7 +87,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="sPipe.h" />
+    <ClInclude Include="Src\Hipolipolopigus\sPipe.h" />
     <ClInclude Include="Src\Hipolipolopigus.h" />
     <ClInclude Include="Src\common\Log.h" />
     <ClInclude Include="Src\common\Utils.h" />
@@ -124,7 +124,7 @@
     <ClInclude Include="Src\Game\WaveManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sPipe.cpp" />
+    <ClCompile Include="Src\Hipolipolopigus\sPipe.cpp" />
     <ClCompile Include="Src\common\Log.cpp" />
     <ClCompile Include="Src\Game\ArenaBuilder.cpp" />
     <ClCompile Include="Src\Game\AssetManager.cpp" />
