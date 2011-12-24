@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Pipe.cs" />
     <Compile Include="Program.cs" />

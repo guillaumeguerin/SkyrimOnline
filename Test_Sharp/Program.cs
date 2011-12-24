@@ -13,27 +13,29 @@ namespace Test_Sharp
     {
         static void Main(string[] args)
         {
-            DataEventReader.Start();
-            p.WriteCommand(globals.commands.Note, "OMFGLULZMSG!");
-            object r = p.GetCallback("super", "tester");
-            byte[] ints = new byte[5];
-            for (byte i = 1; i < 5; i++)
-                ints[i] = (byte)(i*i*i);
-            int value = BitConverter.ToInt32(ints, 1);
+            globals.MainPipe.WriteCommand(globals.commands.Note, "OMFGLULZMSG!");
+            Stopwatch w = new Stopwatch();
+            w.Start();
+            //Return an IntPtr valued with the byte system n = (n+1)^3 
+            //             byte[] ints = new byte[5];
+            //             for (byte i = 1; i < 5; i++)
+            //                 ints[i] = (byte)(i * i * i);
+            //             int value = BitConverter.ToInt32(ints, 1);
+            //1075513345
+            IntPtr r = (IntPtr)globals.MainPipe.GetCallback("super", "tester");
+
+            //Return a byte array of length [Parameter]
+            byte[] test = (byte[])globals.MainPipe.GetCallback("dbg_salsa", short.MaxValue);
+            test = (byte[])globals.MainPipe.GetCallback("dbg_salsa", short.MaxValue);
+            test = (byte[])globals.MainPipe.GetCallback("dbg_salsa", short.MaxValue);
+            test = (byte[])globals.MainPipe.GetCallback("dbg_salsa", short.MaxValue);
+            test = (byte[])globals.MainPipe.GetCallback("dbg_salsa", short.MaxValue);
+            test = (byte[])globals.MainPipe.GetCallback("dbg_salsa", short.MaxValue);
+            test = (byte[])globals.MainPipe.GetCallback("dbg_salsa", short.MaxValue);
+            test = (byte[])globals.MainPipe.GetCallback("dbg_salsa", short.MaxValue);
+            test = (byte[])globals.MainPipe.GetCallback("dbg_salsa", short.MaxValue);
+            test = (byte[])globals.MainPipe.GetCallback("dbg_salsa", short.MaxValue);
+            w.Stop();
         }
-        static Pipe
-            p = new Pipe("Tester"),
-            dataEventPipe = new Pipe("Tester.DataEvent");
-        static Thread DataEventReader = new Thread(()=>
-    {
-        KeyValuePair<string, object> _a;
-        while (true)
-        {
-            _a = dataEventPipe.GetStringCallback();
-            if (_a.Key == null)
-                continue;
-            globals.Callbacks.Add(_a.Key, _a.Value);
-        }
-    });
     }
 }

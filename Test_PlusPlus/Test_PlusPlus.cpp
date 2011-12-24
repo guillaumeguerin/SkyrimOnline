@@ -75,22 +75,37 @@ int _tmain(int argc, _TCHAR* argv[])
 			string c = _getString(pipe),
 				p = _getString(pipe),
 				guid = _getString(pipe);
-			int i = c.compare("super"),
-				i2 = p.compare("tester");
-			if(i == 0 && i2 == 0)
+//  			int i = c.compare("super"),
+//  				i2 = p.compare("tester");
+			if(c == "super" && p == "tester")
 			{
 				byte magicBuffer[5];
 				magicBuffer[0] = 0;
 				for(int v=1;v<5;v++)
 					magicBuffer[v] = v*v*v;
 				DWORD writ;
-				_sendString(callbackPipe, guid);
 				byte magicLength[2];
 				magicLength[0]=5;
 				magicLength[1]=0;
+				_sendString(callbackPipe, guid);
 				WriteFile(callbackPipe, magicLength, 2, &writ, NULL);
 				WriteFile(callbackPipe, magicBuffer, 5, &writ, NULL);
 			}
+			else if(c == "dbg_salsa")
+			{
+				short v = (short)atoi(p.c_str());
+				byte *_Arr = new byte[v];
+				_Arr[0] = 1;
+				byte mbuff[2];
+				mbuff[1] = (byte)(v >> 8);
+				mbuff[0] = (byte)(v & 255);
+				DWORD writ = 0;
+				_sendString(callbackPipe, guid);
+				WriteFile(callbackPipe, mbuff, 2, &writ, NULL);
+				WriteFile(callbackPipe, _Arr, v, &writ, NULL);
+				_Arr = NULL;
+			}
+			p =  c = "";
 		}
 	}
 	return 0;

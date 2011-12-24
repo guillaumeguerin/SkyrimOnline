@@ -66,36 +66,28 @@ namespace SkyNet
             leng = BitConverter.GetBytes((short)data.Length);
             GetStream.Write(leng, 0, 2);
             GetStream.Write(data, 0, data.Length);
-            while (!globals.Callbacks.ContainsKey(guid)) ;
+            while (!globals.Callbacks.ContainsKey(guid))
+                Thread.Sleep(10);
             object r = globals.Callbacks[guid];
             globals.Callbacks.Remove(guid);
             return r;
         }
-        public KeyValuePair<string, object> GetStringCallback()
+        internal KeyValuePair<string, object> GetStringCallback()
         {
-//             KeyValuePair<string, object> re = new KeyValuePair<string, object>(null,null);
-//             Stopwatch w = new Stopwatch();
-//             Thread t = new Thread(() =>
-//             {
-                short len;
-                byte[] buffer = new byte[2];
-                GetStream.Read(buffer, 0, 2);
-                len = BitConverter.ToInt16(buffer, 0);
-                buffer = new byte[len];
-                GetStream.Read(buffer, 0, len);
-                string key = Encoding.ASCII.GetString(buffer);
+            short len;
+            byte[] buffer = new byte[2];
+            GetStream.Read(buffer, 0, 2);
+            len = BitConverter.ToInt16(buffer, 0);
+            buffer = new byte[len];
+            GetStream.Read(buffer, 0, len);
+            string key = Encoding.ASCII.GetString(buffer);
 
-                buffer = new byte[2];
-                GetStream.Read(buffer, 0, 2);
-                len = BitConverter.ToInt16(buffer, 0);
-                buffer = new byte[len];
-                GetStream.Read(buffer, 0, len);
-                /*re =*/return new KeyValuePair<string, object>(key, globals.ParseBuffer(buffer));
-//             });
-//             t.Start();
-//             w.Start();
-//             while (w.ElapsedTicks < 50) ;
-//             return re;
+            buffer = new byte[2];
+            GetStream.Read(buffer, 0, 2);
+            len = BitConverter.ToInt16(buffer, 0);
+            buffer = new byte[len];
+            GetStream.Read(buffer, 0, len);
+            return new KeyValuePair<string, object>(key, globals.ParseBuffer(buffer));
         }
     }
 }
