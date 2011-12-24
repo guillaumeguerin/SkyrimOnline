@@ -2,7 +2,7 @@
 class sPipe
 {
 private:
-	sPipe(std::string Name, bool IsServer);
+	sPipe(std::string Name);
 public:
 	HANDLE Handle();
 	bool Connect();

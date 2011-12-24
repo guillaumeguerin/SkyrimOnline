@@ -20,4 +20,28 @@ public static class globals
         T.Start();
         return 0;
     }
+
+    public static class commands
+    {
+        public const string
+            Message = "msg",
+            Console = "ding",
+            Note = "note";
+    }
+
+    public static Dictionary<string, object> Callbacks = new Dictionary<string, object>();
+
+    public static object ParseBuffer(byte[] Buffer)
+    {
+        switch (Buffer[0])
+        {
+            case 0:
+                {
+                    //I32 Pointer
+                    int i = BitConverter.ToInt32(Buffer, 1);
+                    return new IntPtr(i);
+                }
+        }
+        return null;
+    }
 }

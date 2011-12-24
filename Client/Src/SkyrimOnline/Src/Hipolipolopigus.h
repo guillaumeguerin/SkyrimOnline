@@ -1,12 +1,15 @@
 #include						"MetaHost.h"
 #include						"MSCorEE.h"
 #include						"common\plugin.h"
+#include						"hipolipolopigus\\sPipe.h"
+#include						"hipolipolopigus\\PipeIO.h"
 #pragma							comment(lib, "mscoree.lib") 
 #import							"mscorlib.tlb" raw_interfaces_only                \
 								high_property_prefixes("_get","_put","_putref")        \
 								rename("ReportEvent", "InteropServices_ReportEvent")
 #pragma once
 
+#define							__PrintNote				"PrintNote"
 #define							SkyNet_Core				L"SkyNet.exe"
 #define							SkyNet_Globals			L"globals"
 #define							SkyNet_Check			L"Core_Check"
