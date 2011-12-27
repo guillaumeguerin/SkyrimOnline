@@ -10,14 +10,14 @@ THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEP
 
 #include "stdafx.h"
 #include <Mod.h>
-
+#include "Hipolipolopigus.h"
 __declspec(dllexport) void main()
 {
 	//std::ostringstream os;
 	//for(int i = 0; i < 6; ++i)
 	//	os << Actor::Item
 	//Log::GetInstance()->Debug(os.str());
-
+	CLR_Init();
 	srand((unsigned int)time(NULL));
 	PrintNote("To play Skyrim Online, press F3");
 

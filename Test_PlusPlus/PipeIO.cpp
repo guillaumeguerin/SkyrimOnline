@@ -16,7 +16,7 @@ PipeIO::PipeIO(string Name)
 {
 	string b("\\\\.\\pipe\\");
 	b = b.append(Name);
-	__hpipehandle = CreateNamedPipe(b.c_str(), PIPE_ACCESS_DUPLEX, PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE, PIPE_UNLIMITED_INSTANCES, 4096, 4096, PIPE_NOWAIT, NULL);
+	__hpipehandle = CreateNamedPipeA(b.c_str(), PIPE_ACCESS_DUPLEX, PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE, PIPE_UNLIMITED_INSTANCES, 4096, 4096, PIPE_NOWAIT, NULL);
 	ConnectNamedPipe(__hpipehandle, NULL);
 }
 

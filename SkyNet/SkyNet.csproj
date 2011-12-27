@@ -47,7 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core.cs" />
+    <Compile Include="Entities\BaseEntity.cs" />
+    <Compile Include="Extension\SuperAssembly.cs" />
     <Compile Include="Globals.cs" />
+    <Compile Include="Math\Vector3.cs" />
     <Compile Include="Pipe.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

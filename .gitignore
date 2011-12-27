@@ -24,3 +24,8 @@ Test_Sharp/bin/*
 SkyNet/obj/*
 Server/*log
 Test_PlusPlus/Release/*
+Client/Src/SkyrimOnline/Debug/vc100.idb
+Client/Src/SkyrimOnlineProxy/Debug/cl.command.1.tlog
+Client/Src/SkyrimOnlineProxy/Debug/*
+SampleLauncher/bin/*
+SampleLauncher/obj/*

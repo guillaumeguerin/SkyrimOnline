@@ -105,6 +105,10 @@ int _tmain(int argc, _TCHAR* argv[])
 				WriteFile(callbackPipe, _Arr, v, &writ, NULL);
 				_Arr = NULL;
 			}
+			else if (c== "GetPosition")
+			{
+
+			}
 			p =  c = "";
 		}
 	}

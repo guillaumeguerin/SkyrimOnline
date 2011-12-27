@@ -5,7 +5,7 @@
 HANDLE Hipolipolopigus_ComIO_MakePipe(const char* Name)
 {
 	string s = string("\\\\.\\pipe\\").append(Name);
-	return CreateNamedPipe(s.c_str(), PIPE_ACCESS_DUPLEX,
+	return CreateNamedPipeA(s.c_str(), PIPE_ACCESS_DUPLEX,
 		PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE,
 		PIPE_UNLIMITED_INSTANCES,
 		4096,
