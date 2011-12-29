@@ -16,6 +16,7 @@
     <ClInclude Include="Src\DataBase\DatabasePimplData_i.h" />
     <ClInclude Include="Src\DataBase\Exception.h" />
     <ClInclude Include="Src\DataBase\macros.h" />
+    <ClInclude Include="Src\DataBase\otlv4.h" />
     <ClInclude Include="Src\DataBase\Query.h" />
     <ClInclude Include="Src\DataBase\QueryPimplData_i.h" />
     <ClInclude Include="Src\DataBase\ScopedTransaction.h" />
@@ -41,6 +42,7 @@
     <ClInclude Include="Src\System\WorkQueue.h" />
     <ClInclude Include="Src\stdafx.h" />
     <ClInclude Include="Src\System\Reference.h" />
+    <ClInclude Include="Src\Script\JavaManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\DataBase\BigintColumn.cpp" />
@@ -72,5 +74,6 @@
     <ClCompile Include="Src\System\WorkQueue.cpp" />
     <ClCompile Include="Src\Skyrim.cpp" />
     <ClCompile Include="Src\stdafx.cpp" />
+    <ClCompile Include="Src\Script\JavaManager.cpp" />
   </ItemGroup>
 </Project>

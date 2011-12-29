@@ -14,3 +14,4 @@ Server/Bin/*
 *.opensdf
 Server/Server.suo
 Client/Bin/SkyrimOnlineProxy.dll
+Server/Server.suo
