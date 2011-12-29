@@ -27,17 +27,17 @@ namespace Skyrim
 			delete mMount;
 		}
 		//---------------------------------------------------------------------
-		unsigned int Player::level()
+		unsigned int Player::GetLevel()
 		{
 			return mLevel;
 		}
 		//---------------------------------------------------------------------
-		unsigned int Player::race()
+		unsigned int Player::GetRace()
 		{
 			return mRace;
 		}
 		//---------------------------------------------------------------------
-		unsigned int Player::sex()
+		unsigned int Player::GetSex()
 		{
 			return mSex;
 		}
