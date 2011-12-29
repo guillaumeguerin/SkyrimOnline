@@ -25,12 +25,12 @@ namespace Skyrim{
 
 			void Run();
 
-			void Add(Network::Session::pointer pPlayer);
-			void Remove(Network::Session::pointer pPlayer);
+			void Add(Network::Session* pPlayer);
+			void Remove(Network::Session* pPlayer);
 
-			void DispatchPlayerMoveAndLook(Network::Session::pointer pPlayer);
+			void DispatchPlayerMoveAndLook(Network::Session* pPlayer);
 			void DispatchToAll(Network::Packet&);
-			void DispatchToAllButMe(Network::Packet&, Network::Session::pointer pPlayer);
+			void DispatchToAllButMe(Network::Packet&, Network::Session* pPlayer);
 
 			bool IsMarkedForDelete();
 			std::string GetName();
@@ -39,14 +39,14 @@ namespace Skyrim{
 
 		protected:
 
-			void SendTimeSync(Network::Session::pointer pPlayer);
-			void SendWeatherSync(Network::Session::pointer pPlayer);
+			void SendTimeSync(Network::Session* pPlayer);
+			void SendWeatherSync(Network::Session* pPlayer);
 
 		private:
 
 			bool mPersistant;
 			std::string mName;
-			std::deque<Network::Session::pointer> mSessions;
+			std::deque<Network::Session*> mSessions;
 			boost::mutex mGuard, mReleaseGuard;
 			boost::timer mTimer;
 			boost::thread* mWorldThread;

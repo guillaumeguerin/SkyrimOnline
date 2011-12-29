@@ -57,7 +57,7 @@ namespace Skyrim
 
 				// Work with authenticating sessions
 				std::for_each(sessionCopy.begin(), sessionCopy.end(),
-					[this](Session::pointer pSession)
+					[this](Session* pSession)
 				{
 					// Run must be synchronous
 					pSession->Run();
@@ -89,26 +89,29 @@ namespace Skyrim
 		//---------------------------------------------------------------------
 		void Server::Accept()
 		{
-			Session::pointer session = std::make_shared<Session>(mAcceptor.get_io_service(), this);
+			Session* session = new Session(mAcceptor.get_io_service(), this);
 			mAcceptor.async_accept(session->GetSocket(),
 				boost::bind(&Server::HandleAccept, this,
 				session, boost::asio::placeholders::error));
 		}
 		//---------------------------------------------------------------------
-		void Server::Remove(Session::pointer pPlayer)
+		void Server::Remove(Session* pPlayer)
 		{
 			boost::mutex::scoped_lock lock(mGuard);
 
 			auto itor = std::find(mSessions.begin(), mSessions.end(), pPlayer);
 			if(itor != mSessions.end())
+			{
 				mSessions.erase(itor);
+				pPlayer->Drop();
+			}
 			else
 			{
 				pPlayer->GetWorld()->Remove(pPlayer);
 			}
 		}
 		//---------------------------------------------------------------------
-		void Server::HandleAccept(Session::pointer pSession, const boost::system::error_code& pError)
+		void Server::HandleAccept(Session* pSession, const boost::system::error_code& pError)
 		{
 			if(!pError)
 			{
@@ -120,6 +123,7 @@ namespace Skyrim
 			}
 			else
 			{
+				pSession->Drop();
 				std::cerr << pError.message().c_str() << std::endl;
 			}
 			Accept();
@@ -142,7 +146,7 @@ namespace Skyrim
 			return mMaxConnections;
 		}
 		//---------------------------------------------------------------------
-		void Server::SendShardList(Session::pointer pPlayer)
+		void Server::SendShardList(Session* pPlayer)
 		{
 			Packet packet;
 			packet.Opcode = SMSG_SHARD_LIST;
@@ -159,7 +163,7 @@ namespace Skyrim
 			pPlayer->Write(packet);
 		}
 		//---------------------------------------------------------------------
-		void Server::MoveToWorld(const std::string& pWorldIndex, Session::pointer pPlayer)
+		void Server::MoveToWorld(const std::string& pWorldIndex, Session* pPlayer)
 		{
 			{
 				boost::mutex::scoped_lock lock(mGuard);
@@ -173,6 +177,8 @@ namespace Skyrim
 			{
 				world->Add(pPlayer);
 			}
+
+			pPlayer->Drop();
 		}
 		//---------------------------------------------------------------------
 		void Server::AddShard(Game::World* pWorld)

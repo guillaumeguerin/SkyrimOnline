@@ -14,28 +14,45 @@ THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEP
 namespace Skyrim{
 	namespace System{
 		//---------------------------------------------------------------------
-		void EventEmitter::Add(std::shared_ptr<EventListener> pListener)
+		EventEmitter::EventEmitter()
+		{
+		}
+		//---------------------------------------------------------------------
+		EventEmitter::~EventEmitter()
+		{
+			std::for_each(mListeners.begin(), mListeners.end(), [this](EventListener* pListener) -> void
+				{
+					pListener->Drop();
+				});
+		}
+		//---------------------------------------------------------------------
+		void EventEmitter::Add(EventListener* pListener)
 		{
 			boost::mutex::scoped_lock lock(mGuard);
 			mListeners.push_back(pListener);
+			pListener->Acquire();
 		}
 		//---------------------------------------------------------------------
-		void EventEmitter::Remove(std::shared_ptr<EventListener> pListener)
+		void EventEmitter::Remove(EventListener* pListener)
 		{
 			boost::mutex::scoped_lock lock(mGuard);
 			auto itor = std::find(mListeners.begin(), mListeners.end(), pListener);
 			if(itor != mListeners.end())
+			{
+				pListener->Drop();
 				mListeners.erase(itor);
+			}
 		}
 		//---------------------------------------------------------------------
-		void EventEmitter::Dispatch(std::shared_ptr<System::Event> pEvent)
+		void EventEmitter::Dispatch(System::Event* pEvent)
 		{
 			boost::mutex::scoped_lock lock(mGuard);
 			std::for_each(mListeners.begin(), mListeners.end(),
-				[&](std::shared_ptr<EventListener> pListener)
+				[&](EventListener* pListener)
 				{
 					pListener->OnEvent(pEvent);
 				});
+			pEvent->Drop();
 		}
 		//---------------------------------------------------------------------
 	}

@@ -46,7 +46,7 @@ namespace SkyrimOnline
 					mSession->Write(data);
 				}
 				// 5 times per sec update pos and rot
-				if(mTimer >= 0.2)
+				if(mTimer >= 0.25)
 				{
 					Packet data;
 					data.Opcode = CMSG_POSITION_LOOK;

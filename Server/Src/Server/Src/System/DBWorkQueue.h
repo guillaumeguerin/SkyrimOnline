@@ -32,7 +32,9 @@ namespace Skyrim{
 			void Push(std::shared_ptr<DAO::IDAO> pObject);
 
 		private:
-			Concurrency::concurrent_queue<std::shared_ptr<DAO::IDAO>> mJobs;
+
+			boost::mutex mLock;
+			std::queue<std::shared_ptr<DAO::IDAO>> mJobs;
 			std::list<std::shared_ptr<boost::thread>> mThreads;
 		};
 	}

@@ -23,12 +23,13 @@ namespace Skyrim
 		std::unordered_map<unsigned int, Session::QueryCallback> Session::mQueryHandlers;
 		//---------------------------------------------------------------------
 		Session::Session(boost::asio::io_service& pIoService, Server* pServer)
-			:mSocket(pIoService), mServer(pServer), mAuth(false), mTimeSinceLastMessage(0), mWorld(nullptr)
+			: mSocket(pIoService), mServer(pServer), mAuth(false), mTimeSinceLastMessage(0), mWorld(nullptr)
 		{
 		}
 		//---------------------------------------------------------------------
 		Session::~Session()
 		{
+			System::Log::GetInstance()->Debug("~Session");
 		}
 		//---------------------------------------------------------------------
 		void Session::Close()
@@ -46,25 +47,27 @@ namespace Skyrim
 			boost::asio::ip::tcp::no_delay option(true);
 			mSocket.set_option(option);
 
+			Acquire();
+
 			async_read(mReceivingPacket,
 				boost::bind(&Session::HandleRead, this,
-				boost::asio::placeholders::error,
-				shared_from_this()));
+				boost::asio::placeholders::error));
 		}
 		//---------------------------------------------------------------------
 		void Session::Write(Packet& pData)
 		{
-			mSocket.get_io_service().post(boost::bind(&Session::DoWrite, this, pData, shared_from_this()));
+			mSocket.get_io_service().post(boost::bind(&Session::DoWrite, this, pData));
 		}
 		//---------------------------------------------------------------------
-		void Session::DoWrite(Packet pData, std::shared_ptr<Session> pSession)
+		void Session::DoWrite(Packet pData)
 		{
 			bool write_in_progress = !mToSend.empty();
 			mToSend.push_back(pData);
 			if (!write_in_progress)
 			{
+				Acquire();
 				async_write(mToSend.front(),
-					boost::bind(&Session::HandleWrite, this, boost::asio::placeholders::error, shared_from_this()));
+					boost::bind(&Session::HandleWrite, this, boost::asio::placeholders::error));
 			}
 		}
 		//---------------------------------------------------------------------
@@ -75,7 +78,7 @@ namespace Skyrim
 		//---------------------------------------------------------------------
 		void Session::Run()
 		{
-			System::Event::pointer e;
+			System::Event* e;
 			while(mEvents.try_pop(e))
 			{
 				try{
@@ -84,6 +87,7 @@ namespace Skyrim
 				catch(...)
 				{
 				}
+				e->Drop();
 			}
 
 			Packet data;
@@ -108,7 +112,7 @@ namespace Skyrim
 			}
 		}
 		//---------------------------------------------------------------------
-		void Session::HandleRead(const boost::system::error_code& pError, Session::pointer pMe)
+		void Session::HandleRead(const boost::system::error_code& pError)
 		{
 			if(!pError)
 			{
@@ -116,17 +120,17 @@ namespace Skyrim
 
 				async_read(mReceivingPacket,
 					boost::bind(&Session::HandleRead, this,
-					boost::asio::placeholders::error,
-					shared_from_this()));
+					boost::asio::placeholders::error));
 			}
 			else
 			{
 				//std::cout << pError.message() << std::endl;
-				mServer->Remove(shared_from_this());
+				Drop();
+				mServer->Remove(this);
 			}
 		}
 		//---------------------------------------------------------------------
-		void Session::HandleWrite(const boost::system::error_code& pError, Session::pointer pMe)
+		void Session::HandleWrite(const boost::system::error_code& pError)
 		{
 			if(!pError)
 			{
@@ -134,11 +138,14 @@ namespace Skyrim
 				if (!mToSend.empty())
 				{
 					async_write(mToSend.front(),
-						boost::bind(&Session::HandleWrite, this, boost::asio::placeholders::error, shared_from_this()));
+						boost::bind(&Session::HandleWrite, this, boost::asio::placeholders::error));
 				}
+				else
+					Drop();
 			}
 			else
 			{
+				Drop();
 			}
 		}
 		//---------------------------------------------------------------------
@@ -176,13 +183,26 @@ namespace Skyrim
 			mWorld = pWorld;
 		}
 		//---------------------------------------------------------------------
-		void Session::Remove(Session::pointer pPlayer)
+		void Session::Remove(Session* pPlayer)
 		{
 			auto itor = std::find(mInRange.begin(), mInRange.end(), pPlayer);
 			if(itor != mInRange.end())
 			{
 				SendRemove(pPlayer);
 				mInRange.erase(itor);
+				pPlayer->Drop();
+			}
+		}
+		//---------------------------------------------------------------------
+		void Session::Add(Session* pPlayer)
+		{
+			auto itor = std::find(mInRange.begin(), mInRange.end(), pPlayer);
+			if(itor == mInRange.end())
+			{
+				pPlayer->Acquire();
+
+				SendSpawnPlayer(pPlayer);
+				mInRange.push_back(pPlayer);
 			}
 		}
 		//---------------------------------------------------------------------

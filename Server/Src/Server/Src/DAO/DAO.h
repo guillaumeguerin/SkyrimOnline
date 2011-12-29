@@ -77,21 +77,21 @@ namespace Skyrim{
 
 			void NotifyLoad()
 			{
-				auto event = std::dynamic_pointer_cast<System::Event>(std::make_shared<LoadEvent>());
+				auto event = (System::Event*)(new LoadEvent());
 				event->userData = userData;
 				Dispatch(event);
 			}
 
 			void NotifyLoadFail()
 			{
-				auto event = std::dynamic_pointer_cast<System::Event>(std::make_shared<FailLoadEvent>());
+				auto event = (System::Event*)(new FailLoadEvent());
 				event->userData = userData;
 				Dispatch(event);
 			}
 
 			void NotifySave()
 			{
-				auto event = std::dynamic_pointer_cast<System::Event>(std::make_shared<SaveEvent>());
+				auto event = (System::Event*)new SaveEvent();
 				event->userData = userData;
 				Dispatch(event);
 			}
@@ -123,13 +123,15 @@ namespace Skyrim{
 		template <class T, class U>
 		class DAOk : public DAO<T>
 		{
-			std::shared_ptr<U> mKeep;
+			U* mKeep;
 		public:
-			DAOk(T& pEntity, IDAO::Type pType, std::shared_ptr<U> pKeep)
+			DAOk(T& pEntity, IDAO::Type pType, U* pKeep)
 				:DAO(pEntity,pType),mKeep(pKeep)
-			{}
+			{
+				mKeep->Acquire();
+			}
 
-			virtual ~DAOk(){}
+			virtual ~DAOk(){mKeep->Drop();}
 		};
 
 		template <class T>
@@ -145,13 +147,13 @@ namespace Skyrim{
 		}
 
 		template <class T, class U>
-		std::shared_ptr<IDAO> Load(T& pObject, std::shared_ptr<U> pKeep)
+		std::shared_ptr<IDAO> Load(T& pObject, U* pKeep)
 		{
 			return std::shared_ptr<IDAO>(new DAOk<T,U>(pObject, IDAO::LOAD, pKeep));
 		}
 
 		template <class T, class U>
-		std::shared_ptr<IDAO> Save(T& pObject, std::shared_ptr<U> pKeep)
+		std::shared_ptr<IDAO> Save(T& pObject, U* pKeep)
 		{
 			return std::shared_ptr<IDAO>(new DAOk<T,U>(pObject, IDAO::SAVE, pKeep));
 		}

@@ -50,6 +50,7 @@
     <ClInclude Include="Src\System\EventListener.h" />
     <ClInclude Include="Src\System\Job.h" />
     <ClInclude Include="Src\System\Log.h" />
+    <ClInclude Include="Src\System\Reference.h" />
     <ClInclude Include="Src\System\Vector3.h" />
     <ClInclude Include="Src\System\WorkQueue.h" />
     <ClInclude Include="Src\targetver.h" />

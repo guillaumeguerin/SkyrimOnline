@@ -27,7 +27,7 @@ namespace Skyrim
 			mPlayer.mRotation.Z = pData.Float(5);
 			mPlayer.mElapsed    = pData.Float(6);
 
-			mWorld->DispatchPlayerMoveAndLook(shared_from_this());
+			mWorld->DispatchPlayerMoveAndLook(this);
 		}
 		//---------------------------------------------------------------------
 	}

@@ -24,6 +24,7 @@ THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEP
 #include <stdio.h>
 #include <tchar.h>
 #include <memory>
+#include <queue>
 #include <iostream>
 #include <boost/signal.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>

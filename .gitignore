@@ -1,0 +1,16 @@
+
+Client/Client.opensdf
+Client/ipch/skyrimonline-95aab5bb/skyrimonline-6490cf11.ipch
+*.obj
+*.exp
+Client/Bin/SkyrimOnline.asi
+*.sdf
+*.tlog
+Client/Obj/*
+Server/Obj/*
+*.ipch
+*.suo
+Server/Bin/*
+*.opensdf
+Server/Server.suo
+Client/Bin/SkyrimOnlineProxy.dll

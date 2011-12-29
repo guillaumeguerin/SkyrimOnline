@@ -11,18 +11,20 @@ THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEP
 #pragma once
 
 #include <System/Event.h>
+#include <System/Reference.h>
 
 namespace Skyrim{
 	namespace System
 	{
-		struct EventListener
+		struct EventListener : virtual public Reference
 		{
-			virtual void OnEvent(std::shared_ptr<System::Event> pEvent)
+			virtual void OnEvent(System::Event* pEvent)
 			{
+				pEvent->Acquire();
 				mEvents.push(pEvent);
 			}
 		protected:
-			Concurrency::concurrent_queue<std::shared_ptr<System::Event>> mEvents;
+			Concurrency::concurrent_queue<System::Event*> mEvents;
 		};
 	}
 }

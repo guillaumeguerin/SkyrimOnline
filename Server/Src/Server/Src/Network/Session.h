@@ -14,6 +14,7 @@ THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEP
 #include <Entity/Account.h>
 #include <Network/Packet.h>
 #include <Game/Player.h>
+#include <System/Reference.h>
 
 namespace Skyrim
 {
@@ -27,13 +28,11 @@ namespace Skyrim
 
 		typedef std::deque<Packet> PacketQueue;
 
-		class Session
-			:	public std::enable_shared_from_this<Session>,
-				public System::EventListener
+		class Session :
+				public System::EventListener,
+				virtual public System::Reference
 		{
 		public:
-
-			typedef std::shared_ptr<Session> pointer;
 
 			enum Queries
 			{
@@ -41,7 +40,7 @@ namespace Skyrim
 			};
 
 			Session(boost::asio::io_service& pIoService, Server* pServer);
-			~Session();
+			virtual ~Session();
 
 			void Start();
 			void Run();
@@ -59,16 +58,17 @@ namespace Skyrim
 
 			static void Setup();
 
-			void SendSpawnPlayer(Session::pointer pOther);
-			void SendMoveAndLook(Session::pointer pOther);
-			void SendRemove		(Session::pointer pOther);
-			void SendMount		(Session::pointer pOther);
-			void SendUnmount	(Session::pointer pOther);
+			void SendSpawnPlayer(Session* pOther);
+			void SendMoveAndLook(Session* pOther);
+			void SendRemove		(Session* pOther);
+			void SendMount		(Session* pOther);
+			void SendUnmount	(Session* pOther);
 
-			void HandlePlayerEvent(pointer pPlayer);
-			float GetDistance(pointer pPlayer);
+			void HandlePlayerEvent(Session* pPlayer);
+			float GetDistance(Session* pPlayer);
 
-			void Remove(pointer pPlayer);
+			void Remove	(Session* pPlayer);
+			void Add	(Session* pPlayer);
 
 			unsigned int GetId();
 
@@ -185,9 +185,9 @@ namespace Skyrim
 				}
 			}
 
-			void HandleRead	(const boost::system::error_code& pError,pointer pMe);
-			void HandleWrite(const boost::system::error_code& pError, pointer pMe);
-			void DoWrite(Packet data, pointer pSession);
+			void HandleRead	(const boost::system::error_code& pError);
+			void HandleWrite(const boost::system::error_code& pError);
+			void DoWrite(Packet data);
 			void DispatchInRange(Packet& data);
 
 			/// Handlers
@@ -225,7 +225,7 @@ namespace Skyrim
 			Server*							mServer;
 			Game::World*					mWorld;
 
-			std::list<std::shared_ptr<Session>> mInRange;
+			std::list<Session*> mInRange;
 
 			bool							mAuth;
 			clock_t mTimeSinceLastMessage;

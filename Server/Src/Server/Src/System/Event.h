@@ -10,13 +10,13 @@ THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEP
 
 #pragma once
 
+#include <System/Reference.h>
+
 namespace Skyrim{
 	namespace System
 	{
-		struct Event
+		struct Event : public Reference
 		{
-			typedef std::shared_ptr<Event> pointer;
-
 			enum Type{
 				DATAOBJECT_LOAD,
 				DATAOBJECT_LOAD_FAIL,

@@ -24,7 +24,7 @@ namespace Skyrim
 			mPlayer.mLevel = pData.Int(2);
 		}
 		//---------------------------------------------------------------------
-		void Session::SendSpawnPlayer(Session::pointer pPlayer)
+		void Session::SendSpawnPlayer(Session* pPlayer)
 		{
 			Packet data;
 			data.Opcode = SMSG_PLAYER_SPAWN;
@@ -38,7 +38,7 @@ namespace Skyrim
 			SendMount(pPlayer);
 		}
 		//---------------------------------------------------------------------
-		void Session::SendMount(Session::pointer pPlayer)
+		void Session::SendMount(Session* pPlayer)
 		{
 			if(pPlayer->GetPlayer().HasMount())
 			{
@@ -50,7 +50,7 @@ namespace Skyrim
 			}
 		}
 		//---------------------------------------------------------------------
-		void Session::SendUnmount(Session::pointer pPlayer)
+		void Session::SendUnmount(Session* pPlayer)
 		{
 			if(pPlayer->GetPlayer().HasMount())
 			{
@@ -61,7 +61,7 @@ namespace Skyrim
 			}
 		}
 		//---------------------------------------------------------------------
-		void Session::SendMoveAndLook(Session::pointer pPlayer)
+		void Session::SendMoveAndLook(Session* pPlayer)
 		{
 			Packet data;
 			data.Opcode = SMSG_PLAYER_MOVE_LOOK;
@@ -77,7 +77,7 @@ namespace Skyrim
 			Write(data);
 		}
 		//---------------------------------------------------------------------
-		void Session::SendRemove		(Session::pointer pPlayer)
+		void Session::SendRemove		(Session* pPlayer)
 		{
 			Packet data;
 			data.Opcode = SMSG_PLAYER_REMOVE;
