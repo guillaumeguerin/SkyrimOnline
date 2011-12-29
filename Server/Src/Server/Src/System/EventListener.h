@@ -18,6 +18,9 @@ namespace Skyrim{
 	{
 		struct EventListener : virtual public Reference
 		{
+			EventListener(){}
+			virtual ~EventListener(){}
+
 			virtual void OnEvent(System::Event* pEvent)
 			{
 				pEvent->Acquire();

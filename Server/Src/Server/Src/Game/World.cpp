@@ -19,6 +19,7 @@ namespace Skyrim{
 		World::World(const std::string& pName, bool pPersistant)
 			:mName(pName), mWorldThread(nullptr), mPersistant(pPersistant)
 		{
+			mPlugins.Initialize();
 		}
 		//---------------------------------------------------------------------
 		void World::Run()

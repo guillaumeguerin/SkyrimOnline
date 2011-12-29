@@ -19,7 +19,7 @@ namespace Skyrim{
 		struct EventEmitter
 		{
 			EventEmitter();
-			~EventEmitter();
+			virtual ~EventEmitter();
 
 			void Add(EventListener* pListener);
 			void Remove(EventListener* pListener);

@@ -50,5 +50,6 @@ THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEP
 #include <boost/timer.hpp>
 #include <Game/enums.h>
 #include <System/Log.h>
+#include <tuple>
 
 static const unsigned int Version = 6;

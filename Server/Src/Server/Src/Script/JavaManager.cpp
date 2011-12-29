@@ -1,3 +1,13 @@
+/**
+THE WORK (AS DEFINED BELOW) IS PROVIDED UNDER THE TERMS OF THIS CREATIVE COMMONS PUBLIC LICENSE ("CCPL" OR "LICENSE").
+THE WORK IS PROTECTED BY COPYRIGHT AND/OR OTHER APPLICABLE LAW.
+ANY USE OF THE WORK OTHER THAN AS AUTHORIZED UNDER THIS LICENSE OR COPYRIGHT LAW IS PROHIBITED.
+
+BY EXERCISING ANY RIGHTS TO THE WORK PROVIDED HERE, YOU ACCEPT AND AGREE TO BE BOUND BY THE TERMS OF THIS LICENSE.
+TO THE EXTENT THIS LICENSE MAY BE CONSIDERED TO BE A CONTRACT,
+THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEPTANCE OF SUCH TERMS AND CONDITIONS.
+*/
+
 #include "stdafx.h"
 #include <Script/JavaManager.h>
 
@@ -17,21 +27,20 @@ namespace Skyrim
     {
         //---------------------------------------------------------------------------------------
         void JavaManager::CreateJvm(JavaManager::ClassPath path) {
-                JavaVMInitArgs args;
-                JavaVMOption options[1];
+            JavaVMInitArgs args;
+            JavaVMOption options[1];
 
-                std::string lPath = "-Djava.class.path=";
-                for(int i = 0; i < path.size(); i++)
-                        lPath += path[i] + SEP_REPERTOIRE;
+            std::string lPath = "-Djava.class.path=";
+            for(int i = 0; i < path.size(); i++)
+                    lPath += path[i] + SEP_REPERTOIRE;
 
-                /* There is a new JNI_VERSION_1_4, but it doesn't add anything for the purposes of our example. */
-                args.version = JNI_VERSION_1_6;
-                args.nOptions = 1;
-                options[0].optionString = (char*)lPath.c_str();
-                args.options = options;
-                args.ignoreUnrecognized = JNI_FALSE;
+            args.version = JNI_VERSION_1_6;
+            args.nOptions = 1;
+            options[0].optionString = (char*)lPath.c_str();
+            args.options = options;
+            args.ignoreUnrecognized = JNI_FALSE;
 
-                JNI_CreateJavaVM(&mJvm, (void **)&mEnv, &args);
+            JNI_CreateJavaVM(&mJvm, (void **)&mEnv, &args);
         }
         //---------------------------------------------------------------------------------------
         void JavaManager::DestroyJvm()

@@ -13,6 +13,7 @@ THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEP
 #include <Network/Session.h>
 #include <Game/TimeManager.h>
 #include <Game/WeatherManager.h>
+#include <Script/PluginManager.h>
 
 namespace Skyrim{
 	namespace Game
@@ -50,6 +51,9 @@ namespace Skyrim{
 			boost::mutex mGuard, mReleaseGuard;
 			boost::timer mTimer;
 			boost::thread* mWorldThread;
+
+			// Script
+			Script::PluginManager mPlugins;
 
 			// Actual gameplay related
 			TimeManager mTimeManager;

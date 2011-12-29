@@ -10,38 +10,47 @@ THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEP
 
 #pragma once
 
-#include <jni.h>
+#if defined SCRIPT_EXPORTS
+#define DECLDIR __declspec(dllexport)
+#else
+#define DECLDIR __declspec(dllimport)
+#endif
 
 namespace Skyrim
 {
-    namespace Script
-    {
-        /**
-        * @class JavaManager
-        * @brief Manage Java's VM
-        */
-        class JavaManager {
+	namespace System
+	{
+		class DECLDIR Log
+		{
 		public:
 
-			typedef std::vector<std::string> ClassPath;
+			enum Level
+			{
+				NONE,
+				LOW,
+				VERBOSE
+			};
 
-			JavaManager(ClassPath path);
+			static Log* GetInstance();
+			void Print(const std::string&);
+			void Debug(const std::string&);
+			void Error(const std::string&);
 
-			void CreateJvm(ClassPath path);
-			void DestroyJvm();
+			void SetLevel(Level pLevel);
 
-			JNIEnv* GetJNI();
-
-			jstring GetMainClassName(char *jarname);
-			jstring NewPlatformString(char *s);
-			jstring getPlatformEncoding();
-			jboolean isEncodingSupported(jstring enc);
+			void Update();
 
 		private:
 
-			JavaVM* mJvm;
-			JNIEnv* mEnv;
-			jstring mEncoding;
-        };
-    }
+			void PrintTime();
+
+			Log();
+
+			Concurrency::concurrent_queue<std::pair<int, std::string>> mToLog;
+
+			std::ofstream mLog;
+			static Log* mInstance;
+			Level mLevel;
+		};
+	}
 }

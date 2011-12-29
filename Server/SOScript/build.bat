@@ -1,0 +1,3 @@
+ECHO Generating JNI interface...
+javah -o ../Script/Src/System/LogJNI.h -classpath ../SOScript/build/classes com.skyrimonline.system.Log
+ECHO Done generating JNI interface !

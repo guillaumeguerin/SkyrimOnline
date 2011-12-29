@@ -15,3 +15,8 @@ Server/Bin/*
 Server/Server.suo
 Client/Bin/SkyrimOnlineProxy.dll
 Server/Server.suo
+*.class
+*JNI.h
+Server/SOScript/dist/Script.dll
+Server/SOScript/dist/SOScript.jar
+*.log

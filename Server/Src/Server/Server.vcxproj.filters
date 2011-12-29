@@ -37,12 +37,14 @@
     <ClInclude Include="Src\System\EventEmitter.h" />
     <ClInclude Include="Src\System\EventListener.h" />
     <ClInclude Include="Src\System\Job.h" />
-    <ClInclude Include="Src\System\Log.h" />
     <ClInclude Include="Src\System\Vector3.h" />
     <ClInclude Include="Src\System\WorkQueue.h" />
     <ClInclude Include="Src\stdafx.h" />
     <ClInclude Include="Src\System\Reference.h" />
     <ClInclude Include="Src\Script\JavaManager.h" />
+    <ClInclude Include="Src\Script\JavaPlugin.h" />
+    <ClInclude Include="Src\Script\Plugin.h" />
+    <ClInclude Include="Src\Script\PluginManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\DataBase\BigintColumn.cpp" />
@@ -70,10 +72,11 @@
     <ClCompile Include="Src\Network\Session.cpp" />
     <ClCompile Include="Src\System\DBWorkQueue.cpp" />
     <ClCompile Include="Src\System\EventEmitter.cpp" />
-    <ClCompile Include="Src\System\Log.cpp" />
     <ClCompile Include="Src\System\WorkQueue.cpp" />
     <ClCompile Include="Src\Skyrim.cpp" />
     <ClCompile Include="Src\stdafx.cpp" />
     <ClCompile Include="Src\Script\JavaManager.cpp" />
+    <ClCompile Include="Src\Script\JavaPlugin.cpp" />
+    <ClCompile Include="Src\Script\PluginManager.cpp" />
   </ItemGroup>
 </Project>
