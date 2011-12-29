@@ -52,9 +52,6 @@ namespace Skyrim{
 			boost::timer mTimer;
 			boost::thread* mWorldThread;
 
-			// Script
-			Script::PluginManager mPlugins;
-
 			// Actual gameplay related
 			TimeManager mTimeManager;
 			WeatherManager mWeatherManager;

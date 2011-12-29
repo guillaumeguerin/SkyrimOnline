@@ -14,6 +14,7 @@ THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEP
 #include <System/EventListener.h>
 #include <System/DBWorkQueue.h>
 #include <Game/World.h>
+#include <Script/PluginManager.h>
 
 namespace Skyrim
 {
@@ -74,6 +75,8 @@ namespace Skyrim
 			bool mStarted;
 
 			unsigned int mID;
+
+			Script::PluginManager mPlugins;
 		};
 	}
 }

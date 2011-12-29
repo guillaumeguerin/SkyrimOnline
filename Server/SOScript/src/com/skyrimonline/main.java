@@ -16,6 +16,15 @@ public class main implements Script {
         String curDir = System.getProperty("user.dir");
         System.load(curDir + "\\Script.dll");
     }
+    
+    public static void main(String[] args)
+    {
+    
+    }
+    
+    main(){
+        
+    }
 
 
     @Override

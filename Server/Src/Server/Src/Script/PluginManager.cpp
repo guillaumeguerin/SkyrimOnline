@@ -59,14 +59,14 @@ namespace Skyrim
 				}
 				else if(it->extension() == ".jar")
 				{
-				//	mPlugins.push_back(std::make_tuple(new JavaPlugin(it->string(), *mJava), it->filename().string()));
+					mPlugins.push_back(std::make_tuple(new JavaPlugin(it->string(), *mJava), it->filename().string()));
 				}
 			}
 
-			/*for(auto it = mPlugins.begin(); it != mPlugins.end(); it++)
+			for(auto it = mPlugins.begin(); it != mPlugins.end(); it++)
 			{
 				std::get<0>(*it)->OnEnable();
-			}*/
+			}
 		}
 		//---------------------------------------------------------------------------------------
 		void PluginManager::Free()

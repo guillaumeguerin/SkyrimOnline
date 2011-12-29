@@ -27,6 +27,8 @@ namespace Skyrim
 			System::Log::GetInstance()->Print("               - 1 Network thread                                ");
 			System::Log::GetInstance()->Print("               - 1 Event thread                                  ");
 			System::Log::GetInstance()->Print("");
+
+			mPlugins.Initialize();
 		}
 		//---------------------------------------------------------------------
 		void Server::Start()
