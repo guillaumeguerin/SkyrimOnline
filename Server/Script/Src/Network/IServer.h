@@ -10,29 +10,13 @@ THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEP
 
 #pragma once
 
-#include <jni.h>
-
 namespace Skyrim
 {
-	namespace Game
+	namespace Network
 	{
-		class IWorld
+		class IServer
 		{
 		public:
-
-			virtual void CreateJava() = 0;
-			virtual std::string GetName() = 0;
-			virtual unsigned int Count() = 0;
-			virtual bool IsMarkedForDelete() = 0;
-
-			jobject GetJava()
-			{
-				return mJavaObject;
-			}
-
-		protected:
-
-			jobject mJavaObject;
 		};
 	}
 }

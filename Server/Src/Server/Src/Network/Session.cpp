@@ -29,13 +29,17 @@ namespace Skyrim
 		//---------------------------------------------------------------------
 		Session::~Session()
 		{
-			System::Log::GetInstance()->Debug("~Session");
 		}
 		//---------------------------------------------------------------------
 		void Session::Close()
 		{
 			mSocket.shutdown(boost::asio::ip::tcp::socket::shutdown_type::shutdown_both);
 			mSocket.close();
+		}
+		//---------------------------------------------------------------------
+		Session::pointer Session::shared_from_this()
+		{
+			return boost::static_pointer_cast<Session>(EventListener::shared_from_this());
 		}
 		//---------------------------------------------------------------------
 		void Session::Start()

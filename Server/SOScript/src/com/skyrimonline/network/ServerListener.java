@@ -4,12 +4,13 @@
  */
 package com.skyrimonline.network;
 
+import com.skyrimonline.game.World;
+
 /**
  *
  * @author yamashi
  */
-public class Server {
-    
-    private long ptr;
-    
+public interface ServerListener {
+    public void onNewShard(World world);
+    public void onDeleteShard(World world);
 }

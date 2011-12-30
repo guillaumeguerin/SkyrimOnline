@@ -10,13 +10,19 @@ THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEP
 
 #pragma once
 
+#if defined SCRIPT_EXPORTS
+#define DECLDIR __declspec(dllexport)
+#else
+#define DECLDIR __declspec(dllimport)
+#endif
+
 namespace Skyrim
 {
-	namespace Game
+	class DECLDIR IPluginManager
 	{
-		class IServer
-		{
-		public:
-		};
-	}
+	public:
+		virtual void Register(void* handle, int event) = 0;
+	protected:
+		static IPluginManager* mInstance;
+	};
 }

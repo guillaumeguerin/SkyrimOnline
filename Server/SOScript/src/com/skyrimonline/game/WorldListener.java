@@ -2,14 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.skyrimonline.network;
+package com.skyrimonline.game;
 
 /**
  *
  * @author yamashi
  */
-public class Server {
+public interface WorldListener {
     
-    private long ptr;
+    public void onUpdate();
     
 }

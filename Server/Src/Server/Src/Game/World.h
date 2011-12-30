@@ -15,18 +15,25 @@ THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEP
 #include <Game/WeatherManager.h>
 #include <Script/PluginManager.h>
 #include <Game/IWorld.h>
+#include <System/Job.h>
 
 namespace Skyrim
 {
+	namespace Network
+	{
+		class Server;
+	}
 	namespace Game
 	{
-		class World : public IWorld
+		class World :
+			public IWorld,
+			public System::Job
 		{
 		public:
 
-			World(const std::string&, bool);
+			World(const std::string& pName, bool pPersistent, Network::Server* pServer);
 
-			void Run();
+			void Work();
 
 			void Add(Network::Session::pointer pPlayer);
 			void Remove(Network::Session::pointer pPlayer);
@@ -40,6 +47,8 @@ namespace Skyrim
 
 			unsigned int Count();
 
+			void CreateJava();
+
 		protected:
 
 			void SendTimeSync(Network::Session::pointer pPlayer);
@@ -52,7 +61,9 @@ namespace Skyrim
 			std::deque<Network::Session::pointer> mSessions;
 			boost::mutex mGuard, mReleaseGuard;
 			boost::timer mTimer;
-			boost::thread* mWorldThread;
+			bool mScheduled;
+
+			Network::Server* mServer;
 
 			// Actual gameplay related
 			TimeManager mTimeManager;

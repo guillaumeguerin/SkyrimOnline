@@ -24,6 +24,8 @@ namespace Skyrim{
 
 			void Run();
 
+			void Add(Job* task);
+
 		private:
 			Concurrency::concurrent_queue<Job*> mJobs;
 			std::list<std::shared_ptr<boost::thread>> mThreads;

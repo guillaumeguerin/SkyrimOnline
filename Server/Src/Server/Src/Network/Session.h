@@ -29,12 +29,9 @@ namespace Skyrim
 		typedef std::deque<Packet> PacketQueue;
 
 		class Session :
-				public virtual boost::enable_shared_from_this<Session>,
 				public System::EventListener
 		{
 		public:
-
-			using boost::enable_shared_from_this<Session>::shared_from_this;
 
 			typedef boost::shared_ptr<Session> pointer;
 
@@ -46,23 +43,60 @@ namespace Skyrim
 			Session(boost::asio::io_service& pIoService, Server* pServer);
 			virtual ~Session();
 
+			/**
+			 * bad_weak_ptr if not done like this :(
+			 * @return A pointer to the session
+			 */
+			pointer shared_from_this();
+
+			/**
+			 * Starts listening to the session
+			 */
 			void Start();
+
+			/**
+			 * Parse packets, run logic...
+			 */
 			void Run();
-			void Write();
+
+			/**
+			 * Write a packet to the session, non blocking, undefined timing
+			 * @param pData The packet to send
+			 */
 			void Write(Packet& pData);
+
+			/**
+			 * Close the connection, will trigger scalar destruction
+			 */
 			void Close();
 
+			/**
+			 * Get the session's socket
+			 * @return The socket
+			 */
 			boost::asio::ip::tcp::socket& GetSocket();
 
 			Server& GetServer();
 			Game::Player& GetPlayer();
 			Game::World* GetWorld();
 
+			/**
+			 * When switching between world, this function will set the session's owner
+			 * @param pWorld The owner
+			 */
 			void SetWorld(Game::World* pWorld);
 
+			/**
+			 * Set up the opcode handlers, must be called once
+			 */
 			static void Setup();
 
+			/**
+			 * Send to the session a player spawn packet
+			 * @param pOther The player to spawn
+			 */
 			void SendSpawnPlayer(Session::pointer pOther);
+
 			void SendMoveAndLook(Session::pointer pOther);
 			void SendRemove		(Session::pointer pOther);
 			void SendMount		(Session::pointer pOther);
@@ -212,7 +246,7 @@ namespace Skyrim
 			typedef  void(Session::*CallBack)(Packet&);
 			typedef  void(Session::*QueryCallback)();
 
-	// NETWORK
+	// <network>
 			enum { header_length = 4 };
 			std::string outbound_header_;
 			std::string outbound_data_;
@@ -225,19 +259,20 @@ namespace Skyrim
 			PacketQueue mToSend;
 
 			boost::asio::ip::tcp::socket	mSocket;
-	// ~NETWORK
+	// </network>
 
 			Server*							mServer;
 			Game::World*					mWorld;
 
-			std::list<Session::pointer> mInRange;
+			std::list<Session::pointer>		mInRange;
 
 			bool							mAuth;
-			clock_t mTimeSinceLastMessage;
+			clock_t							mTimeSinceLastMessage;
 
 			Game::Player mPlayer;
 			Entity::Account mAccount;
 
+	// static handlers
 			static std::unordered_map<unsigned int, CallBack> mAuthHandlers;
 			static std::unordered_map<unsigned int, CallBack> mHandlers;
 			static std::unordered_map<unsigned int, QueryCallback> mQueryHandlers;

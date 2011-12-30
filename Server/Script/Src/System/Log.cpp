@@ -21,7 +21,6 @@ JNIEXPORT void JNICALL Java_com_skyrimonline_system_Log_Debug
 	const char *nativeString = env->GetStringUTFChars(str, 0);
 
 	Skyrim::System::Log::GetInstance()->Debug(nativeString);
-	Skyrim::System::Log::GetInstance()->Update();
 
 	env->ReleaseStringUTFChars(str, nativeString);
 }
@@ -32,7 +31,6 @@ JNIEXPORT void JNICALL Java_com_skyrimonline_system_Log_Error
 	const char *nativeString = env->GetStringUTFChars(str, 0);
 
 	Skyrim::System::Log::GetInstance()->Error(nativeString);
-	Skyrim::System::Log::GetInstance()->Update();
 
 	env->ReleaseStringUTFChars(str, nativeString);
 }
@@ -43,7 +41,6 @@ JNIEXPORT void JNICALL Java_com_skyrimonline_system_Log_Print
 	const char *nativeString = env->GetStringUTFChars(str, 0);
 
 	Skyrim::System::Log::GetInstance()->Print(nativeString);
-	Skyrim::System::Log::GetInstance()->Update();
 
 	env->ReleaseStringUTFChars(str, nativeString);
 }

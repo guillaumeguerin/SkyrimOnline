@@ -48,6 +48,7 @@
       <FileType>CppHeader</FileType>
     </ClCompile>
     <ClInclude Include="Src\Script\JavaPlugin.h" />
+    <ClInclude Include="Src\Script\JavaPluginManager.h" />
     <ClInclude Include="Src\Script\Plugin.h" />
     <ClInclude Include="Src\Script\PluginManager.h" />
     <ClInclude Include="Src\stdafx.h" />
@@ -86,6 +87,7 @@
     <ClCompile Include="Src\Network\Server.cpp" />
     <ClCompile Include="Src\Network\Session.cpp" />
     <ClCompile Include="Src\Script\JavaManager.cpp" />
+    <ClCompile Include="Src\Script\JavaPluginManager.cpp" />
     <ClCompile Include="Src\Script\PluginManager.cpp" />
     <ClCompile Include="Src\Skyrim.cpp" />
     <ClCompile Include="Src\stdafx.cpp">

@@ -83,8 +83,12 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Game\IServer.h" />
+    <ClInclude Include="Src\Game\WorldJNI.h" />
+    <ClInclude Include="Src\IPluginManager.h" />
+    <ClInclude Include="Src\Network\IServer.h" />
     <ClInclude Include="Src\Game\IWorld.h" />
+    <ClInclude Include="Src\Network\ServerJNI.h" />
+    <ClInclude Include="Src\PluginManagerJNI.h" />
     <ClInclude Include="Src\stdafx.h" />
     <ClInclude Include="Src\System\LogJNI.h" />
     <ClInclude Include="Src\targetver.h" />
@@ -99,6 +103,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Src\Game\IWorld.cpp" />
+    <ClCompile Include="Src\IPluginManager.cpp" />
     <ClCompile Include="Src\Script.cpp" />
     <ClCompile Include="Src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

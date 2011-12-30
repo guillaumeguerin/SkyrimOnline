@@ -9,9 +9,21 @@ namespace Skyrim
 	namespace Script
 	{
 		//---------------------------------------------------------------------------------------
+		PluginManager* PluginManager::mInstance = nullptr;
+		//---------------------------------------------------------------------------------------
+		PluginManager& PluginManager::GetInstance()
+		{
+			if(mInstance == nullptr)
+			{
+				mInstance = new PluginManager;
+				mInstance->Initialize();
+			}
+			return *mInstance;
+		}
+		//---------------------------------------------------------------------------------------
 		void PluginManager::Initialize()
 		{
-			boost::filesystem::path lDir(".");
+			boost::filesystem::path lDir("./Script");
 
 			if(!boost::filesystem::exists(lDir))
 				boost::filesystem::create_directory(lDir);
@@ -21,6 +33,7 @@ namespace Skyrim
 			std::copy(boost::filesystem::directory_iterator(lDir),boost::filesystem::directory_iterator(),std::back_inserter(lFiles));
 
 			JavaManager::ClassPath lPath;
+			lPath.push_back("./SOScript.jar");
 			for(auto it = lFiles.begin(); it != lFiles.end(); it++)
 			{
 				if(it->extension() == ".jar")
@@ -30,6 +43,7 @@ namespace Skyrim
 			}
 
 			mJava = new JavaManager(lPath);
+			mPluginManager = new JavaPluginManager(*mJava,*this);
 
 			for(auto it = lFiles.begin(); it != lFiles.end(); it++)
 			{
@@ -59,7 +73,7 @@ namespace Skyrim
 				}
 				else if(it->extension() == ".jar")
 				{
-					mPlugins.push_back(std::make_tuple(new JavaPlugin(it->string(), *mJava), it->filename().string()));
+					mPlugins.push_back(std::make_tuple(new JavaPlugin(it->string(), *mJava, *mPluginManager), it->filename().string()));
 				}
 			}
 
@@ -80,6 +94,30 @@ namespace Skyrim
 			{
 				FreeLibrary(*it);
 			}
+		}
+		//---------------------------------------------------------------------------------------
+		void PluginManager::AddShard(Game::IWorld* world)
+		{
+			world->CreateJava();
+
+			for(auto it = mServerListeners.begin(); it != mServerListeners.end(); it++)
+			{
+				 (*it)->OnNewShard(world);
+			}
+		}
+		//---------------------------------------------------------------------------------------
+		void PluginManager::Register(Plugin* plugin, int event)
+		{
+			switch(event)
+			{
+				case SERVER: mServerListeners.push_back(plugin); break;
+				case WORLD: mWorldListeners.push_back(plugin); break;
+			}
+		}
+		//---------------------------------------------------------------------------------------
+		JavaManager& PluginManager::GetJavaManager()
+		{
+			return *mJava;
 		}
 		//---------------------------------------------------------------------------------------
 	}

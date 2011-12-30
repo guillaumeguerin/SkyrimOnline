@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Game/IWorld.h>
+
 namespace Skyrim
 {
 	namespace Script
@@ -12,6 +14,8 @@ namespace Skyrim
 
 			__declspec(nothrow) virtual void OnEnable() = 0;
 			__declspec(nothrow) virtual void OnDisable() = 0;
+
+			__declspec(nothrow) virtual void OnNewShard(Game::IWorld*) = 0;
 		};
 	}
 }

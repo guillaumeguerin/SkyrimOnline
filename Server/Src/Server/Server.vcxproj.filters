@@ -45,6 +45,7 @@
     <ClInclude Include="Src\Script\JavaPlugin.h" />
     <ClInclude Include="Src\Script\Plugin.h" />
     <ClInclude Include="Src\Script\PluginManager.h" />
+    <ClInclude Include="Src\Script\JavaPluginManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\DataBase\BigintColumn.cpp" />
@@ -78,5 +79,6 @@
     <ClCompile Include="Src\Script\JavaManager.cpp" />
     <ClCompile Include="Src\Script\JavaPlugin.cpp" />
     <ClCompile Include="Src\Script\PluginManager.cpp" />
+    <ClCompile Include="Src\Script\JavaPluginManager.cpp" />
   </ItemGroup>
 </Project>
