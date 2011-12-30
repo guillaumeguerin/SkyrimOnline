@@ -24,6 +24,7 @@ namespace Skyrim
 			virtual std::string GetName() = 0;
 			virtual unsigned int Count() = 0;
 			virtual bool IsMarkedForDelete() = 0;
+			virtual void Start() = 0;
 
 			jobject GetJava()
 			{

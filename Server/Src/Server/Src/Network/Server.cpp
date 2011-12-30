@@ -63,6 +63,12 @@ namespace Skyrim
 			Accept();
 			Scale();
 
+			auto end = mWorlds.end();
+			for(auto itor = mWorlds.begin(); itor != end; ++itor)
+			{
+				itor->second->Start();
+			}
+
 			System::Log::GetInstance()->Print("Waiting for connections.");
 			mStarted = true;
 

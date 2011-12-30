@@ -35,6 +35,8 @@ namespace Skyrim
 
 			void Work();
 
+			void Start();
+
 			void Add(Network::Session::pointer pPlayer);
 			void Remove(Network::Session::pointer pPlayer);
 

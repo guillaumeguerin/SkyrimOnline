@@ -18,7 +18,7 @@ namespace Skyrim{
 	{
 		//---------------------------------------------------------------------
 		World::World(const std::string& pName, bool pPersistant, Network::Server* pServer)
-			:mName(pName), mPersistant(pPersistant), mServer(pServer)
+			:mName(pName), mPersistant(pPersistant), mServer(pServer), mScheduled(false)
 		{
 		}
 		//---------------------------------------------------------------------
@@ -59,11 +59,7 @@ namespace Skyrim{
 			}
 			{
 				boost::mutex::scoped_lock(mReleaseGuard);
-				if(!mScheduled)
-				{
-					mScheduled = true;
-					mServer->GetWorkQueue()->Add(this);
-				}
+				Start();
 			}
 
 			pPlayer->SetWorld(this);
@@ -145,6 +141,15 @@ namespace Skyrim{
 		unsigned int World::Count()
 		{
 			return static_cast<unsigned int>(mSessions.size());
+		}
+		//---------------------------------------------------------------------
+		void World::Start()
+		{
+			if(!mScheduled)
+			{
+				mScheduled = true;
+				mServer->GetWorkQueue()->Add(this);
+			}
 		}
 		//---------------------------------------------------------------------
 		void World::CreateJava()
