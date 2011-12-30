@@ -11,20 +11,17 @@ namespace SkyNet.Entities
     [Guid("EBD8FF69-8951-4AD2-BCDF-5AA489B899EB")]
     public class BaseEntity
     {
-        IntPtr _ref;
-        public BaseEntity(IntPtr RefID)
+        uint _ref;
+        public BaseEntity(uint RefID)
         {
             _ref = RefID;
         }
-        public Vector3 Position
+        public Vector3 Position;
+        public virtual int Type
         {
             get
             {
-                return (Vector3)Core.Call("GetPosition", _ref);
-            }
-            set
-            {
-                Core.Call("SetPosition", value.ToArray);
+                return Values.Type_Entity.Base;   //Base
             }
         }
     }

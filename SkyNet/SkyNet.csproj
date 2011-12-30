@@ -48,12 +48,17 @@
   <ItemGroup>
     <Compile Include="Core.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
+    <Compile Include="Entities\NPC.cs" />
     <Compile Include="Extension\SuperAssembly.cs" />
     <Compile Include="Globals.cs" />
+    <Compile Include="Items\BaseItem.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Pipe.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Economy\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

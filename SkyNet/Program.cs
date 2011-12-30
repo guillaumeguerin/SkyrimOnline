@@ -9,6 +9,7 @@ namespace SkyNet
     {
         internal static void Main(string[] args)
         {
+            bool a = Core.UserCanAfford(0, 50);
         }
     }
 }

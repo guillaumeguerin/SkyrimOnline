@@ -50,9 +50,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SkyNet\SkyNet.csproj">
+    <ProjectReference Include="..\SkyNet\SkyNet_Server.csproj">
       <Project>{F52725BA-C338-4A37-B68C-15413D998E53}</Project>
-      <Name>SkyNet</Name>
+      <Name>SkyNet_Server</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

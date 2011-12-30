@@ -77,6 +77,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />
+    <None Include="SkyNet.tlb" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HipIO.h" />
