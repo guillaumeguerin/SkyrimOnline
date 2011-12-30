@@ -16,18 +16,20 @@ THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEP
 namespace Skyrim{
 	namespace System
 	{
-		struct EventListener : virtual public Reference
+		struct EventListener :
+			public virtual boost::enable_shared_from_this<EventListener>
 		{
+			typedef boost::shared_ptr<EventListener> pointer;
+
 			EventListener(){}
 			virtual ~EventListener(){}
 
-			virtual void OnEvent(System::Event* pEvent)
+			virtual void OnEvent(System::Event::pointer pEvent)
 			{
-				pEvent->Acquire();
 				mEvents.push(pEvent);
 			}
 		protected:
-			Concurrency::concurrent_queue<System::Event*> mEvents;
+			Concurrency::concurrent_queue<System::Event::pointer> mEvents;
 		};
 	}
 }

@@ -14,11 +14,13 @@ THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEP
 #include <Game/TimeManager.h>
 #include <Game/WeatherManager.h>
 #include <Script/PluginManager.h>
+#include <Game/IWorld.h>
 
-namespace Skyrim{
+namespace Skyrim
+{
 	namespace Game
 	{
-		class World
+		class World : public IWorld
 		{
 		public:
 
@@ -26,12 +28,12 @@ namespace Skyrim{
 
 			void Run();
 
-			void Add(Network::Session* pPlayer);
-			void Remove(Network::Session* pPlayer);
+			void Add(Network::Session::pointer pPlayer);
+			void Remove(Network::Session::pointer pPlayer);
 
-			void DispatchPlayerMoveAndLook(Network::Session* pPlayer);
+			void DispatchPlayerMoveAndLook(Network::Session::pointer pPlayer);
 			void DispatchToAll(Network::Packet&);
-			void DispatchToAllButMe(Network::Packet&, Network::Session* pPlayer);
+			void DispatchToAllButMe(Network::Packet&, Network::Session::pointer pPlayer);
 
 			bool IsMarkedForDelete();
 			std::string GetName();
@@ -40,14 +42,14 @@ namespace Skyrim{
 
 		protected:
 
-			void SendTimeSync(Network::Session* pPlayer);
-			void SendWeatherSync(Network::Session* pPlayer);
+			void SendTimeSync(Network::Session::pointer pPlayer);
+			void SendWeatherSync(Network::Session::pointer pPlayer);
 
 		private:
 
 			bool mPersistant;
 			std::string mName;
-			std::deque<Network::Session*> mSessions;
+			std::deque<Network::Session::pointer> mSessions;
 			boost::mutex mGuard, mReleaseGuard;
 			boost::timer mTimer;
 			boost::thread* mWorldThread;

@@ -27,6 +27,12 @@
     <ClInclude Include="Src\System\LogJNI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Game\IWorld.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Game\IServer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\dllmain.cpp">

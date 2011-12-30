@@ -46,10 +46,10 @@ namespace Skyrim{
 			{
 				try
 				{
+					mLock.lock();
+
 					if(!mJobs.empty())
 					{
-						mLock.lock();
-
 						std::shared_ptr<DAO::IDAO> task = mJobs.front();
 						mJobs.pop();
 
@@ -64,7 +64,10 @@ namespace Skyrim{
 						}
 					}
 					else
+					{
+						mLock.unlock();
 						boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+					}
 				}
 				catch(...)
 				{

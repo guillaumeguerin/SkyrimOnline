@@ -36,7 +36,7 @@ namespace Skyrim{
 					mGuard.unlock();
 
 					std::for_each(sessionCopy.begin(), sessionCopy.end(),
-						[this](Network::Session* pSession)
+						[this](Network::Session::pointer pSession)
 					{
 						pSession->Run();
 					});
@@ -52,9 +52,8 @@ namespace Skyrim{
 			}
 		}
 		//---------------------------------------------------------------------
-		void World::Add(Network::Session* pPlayer)
+		void World::Add(Network::Session::pointer pPlayer)
 		{
-			pPlayer->Acquire();
 			{
 				boost::mutex::scoped_lock lock(mGuard);
 				mSessions.push_back(pPlayer);
@@ -78,30 +77,28 @@ namespace Skyrim{
 			SendWeatherSync(pPlayer);
 		}
 		//---------------------------------------------------------------------
-		void World::Remove(Network::Session* pPlayer)
+		void World::Remove(Network::Session::pointer pPlayer)
 		{
 			boost::mutex::scoped_lock lock(mGuard);
 			auto itor = std::find(mSessions.begin(), mSessions.end(), pPlayer);
 			if(itor != mSessions.end())
 			{
 				std::for_each(mSessions.begin(), mSessions.end(),
-					[this,&pPlayer](Network::Session* pSession)
+					[this,&pPlayer](Network::Session::pointer pSession)
 				{
 					pSession->Remove(pPlayer);
 				});
 
 				mSessions.erase(itor);
-
-				pPlayer->Drop();
 			}
 		}
 		//---------------------------------------------------------------------
-		void World::DispatchPlayerMoveAndLook(Network::Session* pPlayer)
+		void World::DispatchPlayerMoveAndLook(Network::Session::pointer pPlayer)
 		{
 			boost::mutex::scoped_lock lock(mGuard);
 
 			std::for_each(mSessions.begin(), mSessions.end(),
-				[this,&pPlayer](Network::Session* pSession)
+				[this,&pPlayer](Network::Session::pointer pSession)
 			{
 				if(pSession != pPlayer)
 				{
@@ -115,18 +112,18 @@ namespace Skyrim{
 			boost::mutex::scoped_lock lock(mGuard);
 
 			std::for_each(mSessions.begin(), mSessions.end(),
-				[this,&data](Network::Session* pSession)
+				[this,&data](Network::Session::pointer pSession)
 			{
 				pSession->Write(data);
 			});
 		}
 		//---------------------------------------------------------------------
-		void World::DispatchToAllButMe(Network::Packet& data, Network::Session* pPlayer)
+		void World::DispatchToAllButMe(Network::Packet& data, Network::Session::pointer pPlayer)
 		{
 			boost::mutex::scoped_lock lock(mGuard);
 
 			std::for_each(mSessions.begin(), mSessions.end(),
-				[this,&pPlayer,&data](Network::Session* pSession)
+				[this,&pPlayer,&data](Network::Session::pointer pSession)
 			{
 				if(pSession != pPlayer)
 				{

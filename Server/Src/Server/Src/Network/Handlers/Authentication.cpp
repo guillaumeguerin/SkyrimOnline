@@ -26,7 +26,7 @@ namespace Skyrim
 				mAccount.Pass = pData.String(1);
 
 				auto dao = DAO::Load(mAccount);
-				dao->Add(this);
+				dao->Add(shared_from_this());
 				dao->userData = LOAD_USER;
 				mServer->GetDatabaseWorkQueue()->Push(dao);
 			}
@@ -37,7 +37,7 @@ namespace Skyrim
 			if(mAccount.Id != 0)
 			{
 				mAuth = true;
-				GetServer().SendShardList(this);
+				GetServer().SendShardList(shared_from_this());
 			}
 			else
 			{
@@ -48,7 +48,7 @@ namespace Skyrim
 		void Session::HandleShardPick(Packet& pData)
 		{
 			if(mAccount.Id != 0)
-				GetServer().MoveToWorld(pData.String(0), this);
+				GetServer().MoveToWorld(pData.String(0), shared_from_this());
 		}
 		//---------------------------------------------------------------------
 	}

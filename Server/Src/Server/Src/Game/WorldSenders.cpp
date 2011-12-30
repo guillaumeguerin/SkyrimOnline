@@ -16,7 +16,7 @@ namespace Skyrim{
 	namespace Game
 	{
 		//---------------------------------------------------------------------
-		void World::SendTimeSync(Network::Session* pPlayer)
+		void World::SendTimeSync(Network::Session::pointer pPlayer)
 		{
 			Network::Packet packet;
 			packet.Opcode = SMSG_TIME_SYNC;
@@ -26,7 +26,7 @@ namespace Skyrim{
 			pPlayer->Write(packet);
 		}
 		//---------------------------------------------------------------------
-		void World::SendWeatherSync(Network::Session* pPlayer)
+		void World::SendWeatherSync(Network::Session::pointer pPlayer)
 		{
 			Network::Packet packet;
 			packet.Opcode = SMSG_WEATHER_SYNC;

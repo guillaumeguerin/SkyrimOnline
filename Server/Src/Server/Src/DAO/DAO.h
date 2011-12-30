@@ -77,21 +77,21 @@ namespace Skyrim{
 
 			void NotifyLoad()
 			{
-				auto event = (System::Event*)(new LoadEvent());
+				auto event = boost::make_shared<LoadEvent>();
 				event->userData = userData;
 				Dispatch(event);
 			}
 
 			void NotifyLoadFail()
 			{
-				auto event = (System::Event*)(new FailLoadEvent());
+				auto event = boost::make_shared<FailLoadEvent>();
 				event->userData = userData;
 				Dispatch(event);
 			}
 
 			void NotifySave()
 			{
-				auto event = (System::Event*)new SaveEvent();
+				auto event = boost::make_shared<SaveEvent>();
 				event->userData = userData;
 				Dispatch(event);
 			}

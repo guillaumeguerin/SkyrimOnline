@@ -20,39 +20,32 @@ namespace Skyrim{
 		//---------------------------------------------------------------------
 		EventEmitter::~EventEmitter()
 		{
-			std::for_each(mListeners.begin(), mListeners.end(), [this](EventListener* pListener) -> void
-				{
-					pListener->Drop();
-				});
 		}
 		//---------------------------------------------------------------------
-		void EventEmitter::Add(EventListener* pListener)
+		void EventEmitter::Add(EventListener::pointer pListener)
 		{
 			boost::mutex::scoped_lock lock(mGuard);
 			mListeners.push_back(pListener);
-			pListener->Acquire();
 		}
 		//---------------------------------------------------------------------
-		void EventEmitter::Remove(EventListener* pListener)
+		void EventEmitter::Remove(EventListener::pointer pListener)
 		{
 			boost::mutex::scoped_lock lock(mGuard);
 			auto itor = std::find(mListeners.begin(), mListeners.end(), pListener);
 			if(itor != mListeners.end())
 			{
-				pListener->Drop();
 				mListeners.erase(itor);
 			}
 		}
 		//---------------------------------------------------------------------
-		void EventEmitter::Dispatch(System::Event* pEvent)
+		void EventEmitter::Dispatch(System::Event::pointer pEvent)
 		{
 			boost::mutex::scoped_lock lock(mGuard);
 			std::for_each(mListeners.begin(), mListeners.end(),
-				[&](EventListener* pListener)
+				[&](EventListener::pointer pListener)
 				{
 					pListener->OnEvent(pEvent);
 				});
-			pEvent->Drop();
 		}
 		//---------------------------------------------------------------------
 	}

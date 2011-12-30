@@ -29,10 +29,14 @@ namespace Skyrim
 		typedef std::deque<Packet> PacketQueue;
 
 		class Session :
-				public System::EventListener,
-				virtual public System::Reference
+				public virtual boost::enable_shared_from_this<Session>,
+				public System::EventListener
 		{
 		public:
+
+			using boost::enable_shared_from_this<Session>::shared_from_this;
+
+			typedef boost::shared_ptr<Session> pointer;
 
 			enum Queries
 			{
@@ -58,17 +62,17 @@ namespace Skyrim
 
 			static void Setup();
 
-			void SendSpawnPlayer(Session* pOther);
-			void SendMoveAndLook(Session* pOther);
-			void SendRemove		(Session* pOther);
-			void SendMount		(Session* pOther);
-			void SendUnmount	(Session* pOther);
+			void SendSpawnPlayer(Session::pointer pOther);
+			void SendMoveAndLook(Session::pointer pOther);
+			void SendRemove		(Session::pointer pOther);
+			void SendMount		(Session::pointer pOther);
+			void SendUnmount	(Session::pointer pOther);
 
-			void HandlePlayerEvent(Session* pPlayer);
-			float GetDistance(Session* pPlayer);
+			void HandlePlayerEvent(Session::pointer pPlayer);
+			float GetDistance(Session::pointer pPlayer);
 
-			void Remove	(Session* pPlayer);
-			void Add	(Session* pPlayer);
+			void Remove	(Session::pointer pPlayer);
+			void Add	(Session::pointer pPlayer);
 
 			unsigned int GetId();
 
@@ -115,7 +119,7 @@ namespace Skyrim
 					= &Session::handle_read_header<T, Handler>;
 				boost::asio::async_read(mSocket, boost::asio::buffer(inbound_header_),
 					boost::bind(f,
-					this, boost::asio::placeholders::error, boost::ref(t),
+					shared_from_this(), boost::asio::placeholders::error, boost::ref(t),
 					boost::make_tuple(handler)));
 			}
 
@@ -148,7 +152,7 @@ namespace Skyrim
 						T&, boost::tuple<Handler>)
 						= &Session::handle_read_data<T, Handler>;
 					boost::asio::async_read(mSocket, boost::asio::buffer(inbound_data_),
-						boost::bind(f, this,
+						boost::bind(f, shared_from_this(),
 						boost::asio::placeholders::error, boost::ref(t), handler));
 				}
 			}
@@ -216,7 +220,8 @@ namespace Skyrim
 			std::vector<char>  inbound_data_;
 
 			Packet mReceivingPacket;
-			Concurrency::concurrent_queue<Packet> mPackets;
+			boost::mutex mPacketLock;
+			std::queue<Packet> mPackets;
 			PacketQueue mToSend;
 
 			boost::asio::ip::tcp::socket	mSocket;
@@ -225,7 +230,7 @@ namespace Skyrim
 			Server*							mServer;
 			Game::World*					mWorld;
 
-			std::list<Session*> mInRange;
+			std::list<Session::pointer> mInRange;
 
 			bool							mAuth;
 			clock_t mTimeSinceLastMessage;

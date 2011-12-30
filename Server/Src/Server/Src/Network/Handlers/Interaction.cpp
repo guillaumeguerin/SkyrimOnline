@@ -69,7 +69,7 @@ namespace Skyrim
 			}
 		}
 		//---------------------------------------------------------------------
-		void Session::HandlePlayerEvent(Session* pPlayer)
+		void Session::HandlePlayerEvent(Session::pointer pPlayer)
 		{
 			auto itor = std::find(mInRange.begin(), mInRange.end(), pPlayer);
 			if(itor == mInRange.end())
@@ -114,7 +114,7 @@ namespace Skyrim
 			DispatchInRange(packet);
 		}
 		//---------------------------------------------------------------------
-		float Session::GetDistance(Session* pPlayer)
+		float Session::GetDistance(Session::pointer pPlayer)
 		{
 			return pPlayer->GetPlayer().mPosition.Distance(mPlayer.mPosition);
 		}

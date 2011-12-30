@@ -33,7 +33,7 @@ namespace Skyrim
 
 			// MUST NEVER BE CALLED
 			// CALL Close on Session instead
-			void Remove(Session* pSession);
+			void Remove(Session::pointer pSession);
 
 			System::DBWorkQueue* GetDatabaseWorkQueue();
 
@@ -49,24 +49,24 @@ namespace Skyrim
 			unsigned int Peak();
 
 			void DispatchToAll(Packet&);
-			void DispatchToAllButMe(Packet&, Session* pPlayer);
-			void SendShardList(Session* pPlayer);
+			void DispatchToAllButMe(Packet&, Session::pointer pPlayer);
+			void SendShardList(Session::pointer pPlayer);
 
-			void MoveToWorld(const std::string& pWorldIndex, Session* pPlayer);
+			void MoveToWorld(const std::string& pWorldIndex, Session::pointer pPlayer);
 
 		protected:
 
 			void AddShard(Game::World* pWorld);
 
 			void Accept();
-			void HandleAccept(Session* pSession, const boost::system::error_code& pError);
+			void HandleAccept(Session::pointer pSession, const boost::system::error_code& pError);
 
 		private:
 
 			boost::asio::ip::tcp::acceptor mAcceptor;
 
 			boost::mutex							mGuard;
-			std::deque<Session*>			mSessions;
+			std::deque<Session::pointer>			mSessions;
 			std::map<std::string,Game::World*>		mWorlds;
 			System::DBWorkQueue mDBWorkQueue;
 

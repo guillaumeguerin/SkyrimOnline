@@ -83,6 +83,8 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Game\IServer.h" />
+    <ClInclude Include="Src\Game\IWorld.h" />
     <ClInclude Include="Src\stdafx.h" />
     <ClInclude Include="Src\System\LogJNI.h" />
     <ClInclude Include="Src\targetver.h" />

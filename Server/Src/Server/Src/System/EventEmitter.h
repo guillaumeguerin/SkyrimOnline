@@ -21,13 +21,13 @@ namespace Skyrim{
 			EventEmitter();
 			virtual ~EventEmitter();
 
-			void Add(EventListener* pListener);
-			void Remove(EventListener* pListener);
-			void Dispatch(Event* pEvent);
+			void Add(EventListener::pointer pListener);
+			void Remove(EventListener::pointer pListener);
+			void Dispatch(Event::pointer pEvent);
 
 		private:
 
-			std::vector<EventListener*> mListeners;
+			std::vector<EventListener::pointer> mListeners;
 			boost::mutex mGuard;
 		};
 	}
