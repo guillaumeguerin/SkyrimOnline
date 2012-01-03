@@ -24,15 +24,17 @@ public static class globals
 
 namespace Values
 {
-    public static class Type_Entity
+    public enum Type_Entity : byte
     {
-        public const int 
-            Base = 0,
-            NPC = 1;
+        Base = 0,
+        NPC = 1
     }
-    public static class Type_NPC
+    public enum Type_NPC : byte
     {
-        public const int
-            Base = 0;
+        Base = 0
+    }
+    public enum Type_Item : byte
+    {
+        Base = 0
     }
 }

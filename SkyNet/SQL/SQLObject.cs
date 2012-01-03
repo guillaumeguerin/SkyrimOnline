@@ -8,5 +8,6 @@ namespace SkyNet.SQL
     public interface SQLObject
     {
         void DoSQL(MySqlConnection Connection);
+        bool Compare(string[] Comparisson);
     }
 }

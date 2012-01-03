@@ -9,7 +9,7 @@ namespace SkyNet.Entities
 {
     [ComVisible(true)]
     [Guid("EBD8FF69-8951-4AD2-BCDF-5AA489B899EB")]
-    public class BaseEntity
+    public class BaseEntity:MasterObject
     {
         uint _ref;
         public BaseEntity(uint RefID)
@@ -17,7 +17,7 @@ namespace SkyNet.Entities
             _ref = RefID;
         }
         public Vector3 Position;
-        public virtual int Type
+        public virtual Values.Type_Entity Type
         {
             get
             {

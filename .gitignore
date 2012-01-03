@@ -29,3 +29,5 @@ Client/Src/SkyrimOnlineProxy/Debug/cl.command.1.tlog
 Client/Src/SkyrimOnlineProxy/Debug/*
 SampleLauncher/bin/*
 SampleLauncher/obj/*
+SkyNet_Client/obj/*
+Test_PlusPlus/Debug/*

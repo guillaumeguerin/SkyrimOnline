@@ -12,7 +12,10 @@ namespace SkyNet
             _id;
         internal uint
             _gold;
-
+        public bool Compare(string[] Comparisson)
+        {
+            return true;
+        }
         public void DoSQL(MySqlConnection Connection)
         {
 

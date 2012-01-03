@@ -8,7 +8,7 @@ namespace SkyNet.Math
 {
     [ComVisible(true)]
     [Guid("C55B6F57-FA02-43F0-93E2-14DA834A218B")]
-    public class Vector3
+    public class Vector3:MasterObject
     {
         public float
             X,

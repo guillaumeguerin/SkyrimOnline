@@ -7,14 +7,14 @@ namespace SkyNet.Entities
 {
     public class NPC : BaseEntity
     {
-        public override int Type
+        public override Values.Type_Entity Type
         {
             get
             {
                 return Values.Type_Entity.NPC;
             }
         }
-        public virtual int Type_NPC
+        public virtual Values.Type_NPC Type_NPC
         {
             get
             {
