@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using SkyNet.Economy.Auctions;
+using System.Threading;
+using SkyNet.Items;
 
 namespace SkyNet
 {
@@ -14,10 +16,15 @@ namespace SkyNet
         static object
             _userIDLock = (byte)0,
             _auctionIDLock = (byte)0;
+        static readonly Thread
+            _auctionCheck;
+        static bool 
+            _running = true;
 
-        //May consider changing to Dictionary<int, [type]>
-        static List<UserData> _userData = new List<UserData>();
-        static List<AuctionEntry> _auctionData = new List<AuctionEntry>();
+        //May consider changing to Dictionary<ulong, [type]>
+        internal static List<UserData> _userData = new List<UserData>();
+        internal static List<AuctionEntry> _auctionData = new List<AuctionEntry>();
+        internal static List<ItemInstance> _itemInstances = new List<ItemInstance>();
 
         public static UserData GetUser(ulong Data)
         {
@@ -53,23 +60,27 @@ namespace SkyNet
             return r;
         }
 
-        /*internal*/
-        static/* void _*/API()
+        static /*internal void _*/API()
         {
-            _userData.Add(new UserData()
-            {
-                _gold = 500,
-                _id = NextUserID(true)
-            });
-            _auctionData.AddRange(new[]
-            {
-                new AuctionEntry(0, 500, 250),
-                 new AuctionEntry(0, 655),
-                  new AuctionEntry(0, 200),
-                  new AuctionEntry(0, 700),
-                new AuctionEntry(1, 500)
+            _auctionCheck = new Thread(AuctionCheck);
+            _auctionCheck.Start();
+        }
 
-            });
+        static void AuctionCheck()
+        {
+            AuctionEntry[] auctions;
+            ulong now;
+            while (_running)
+            {
+                now = (ulong)DateTime.Now.Ticks;
+                auctions = _auctionData.ToArray();
+                var a = from auction in auctions
+                        where !auction._closed
+                        where auction.TimeCheck(now)
+                        select auction._id;
+                if (!_running)
+                { /*Shutdown cleanly*/ }
+            }
         }
 
         public static bool UserCanAfford(ulong User, uint Amount)
@@ -116,6 +127,13 @@ namespace SkyNet
                 select auction._id;
 
             return a.ToArray();
+        }
+        public static ItemInstance GetItemInstance(ulong ID)
+        {
+            var a = from item in _itemInstances
+                    where item._id == ID
+                    select item;
+            return a.FirstOrDefault();
         }
     }
 }

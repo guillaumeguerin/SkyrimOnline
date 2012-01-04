@@ -11,9 +11,8 @@ namespace SkyNet
     {
         internal static void Main(string[] args)
         {
-            //Retrieve sample auction with Auctioneer ID 0 and a buyout greater than 200 and less than 700 and not equal to 655. The trailing ':' is purged to prevent errors
-            AuctionEntry[] a = API.GetAuctionsMatching("a=0:bo>200:bo<700:bo!655:");
-            ulong[] aIDMode = API.GetAuctionIDsMatching("a=0:bo>200:bo<700:bo!655:");
+            API._auctionData.Add(new AuctionEntry(0,0,0,4));
+            AuctionEntry[] a = API.GetAuctionsMatching("rt=4");
         }
     }
 }

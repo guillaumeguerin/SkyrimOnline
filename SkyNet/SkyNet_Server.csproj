@@ -74,8 +74,10 @@
     <Compile Include="Entities\NPC.cs" />
     <Compile Include="Extension\SuperAssembly.cs" />
     <Compile Include="Globals.cs" />
+    <Compile Include="Items\ItemInstance.cs" />
     <Compile Include="MasterObject.cs" />
     <Compile Include="Items\BaseItem.cs" />
+    <Compile Include="Math\SuperMath.cs" />
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -91,6 +93,9 @@
     <Content Include="System.Threading.Tasks.Dataflow.dll" />
     <Content Include="System.Windows.Controls.Toolkit.dll" />
     <Content Include="System.Windows.Controls.Toolkit.Internals.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Social\Mail\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
