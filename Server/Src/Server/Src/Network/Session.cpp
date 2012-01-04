@@ -23,7 +23,7 @@ namespace Skyrim
 		std::unordered_map<unsigned int, Session::QueryCallback> Session::mQueryHandlers;
 		//---------------------------------------------------------------------
 		Session::Session(boost::asio::io_service& pIoService, Server* pServer)
-			:mSocket(pIoService), mServer(pServer), mAuth(false), mTimeSinceLastMessage(0), mWorld(nullptr)
+			: mSocket(pIoService), mServer(pServer), mAuth(false), mTimeSinceLastMessage(0), mWorld(nullptr)
 		{
 		}
 		//---------------------------------------------------------------------
@@ -37,6 +37,11 @@ namespace Skyrim
 			mSocket.close();
 		}
 		//---------------------------------------------------------------------
+		Session::pointer Session::shared_from_this()
+		{
+			return boost::static_pointer_cast<Session>(EventListener::shared_from_this());
+		}
+		//---------------------------------------------------------------------
 		void Session::Start()
 		{
 			std::ostringstream os;
@@ -47,24 +52,23 @@ namespace Skyrim
 			mSocket.set_option(option);
 
 			async_read(mReceivingPacket,
-				boost::bind(&Session::HandleRead, this,
-				boost::asio::placeholders::error,
-				shared_from_this()));
+				boost::bind(&Session::HandleRead, shared_from_this(),
+				boost::asio::placeholders::error));
 		}
 		//---------------------------------------------------------------------
 		void Session::Write(Packet& pData)
 		{
-			mSocket.get_io_service().post(boost::bind(&Session::DoWrite, this, pData, shared_from_this()));
+			mSocket.get_io_service().post(boost::bind(&Session::DoWrite, shared_from_this(), pData));
 		}
 		//---------------------------------------------------------------------
-		void Session::DoWrite(Packet pData, std::shared_ptr<Session> pSession)
+		void Session::DoWrite(Packet pData)
 		{
 			bool write_in_progress = !mToSend.empty();
 			mToSend.push_back(pData);
 			if (!write_in_progress)
 			{
 				async_write(mToSend.front(),
-					boost::bind(&Session::HandleWrite, this, boost::asio::placeholders::error, shared_from_this()));
+					boost::bind(&Session::HandleWrite, shared_from_this(), boost::asio::placeholders::error));
 			}
 		}
 		//---------------------------------------------------------------------
@@ -86,9 +90,12 @@ namespace Skyrim
 				}
 			}
 
-			Packet data;
-			while(mPackets.try_pop(data))
+			mPacketLock.lock();
+			while(!mPackets.empty())
 			{
+				Packet data = mPackets.front();
+				mPackets.pop();
+
 				try{
 					if(mAuth && mWorld)
 						(this->*mHandlers.at(data.Opcode))(data);
@@ -106,18 +113,20 @@ namespace Skyrim
 					System::Log::GetInstance()->Error(os.str());
 				}
 			}
+			mPacketLock.unlock();
 		}
 		//---------------------------------------------------------------------
-		void Session::HandleRead(const boost::system::error_code& pError, Session::pointer pMe)
+		void Session::HandleRead(const boost::system::error_code& pError)
 		{
 			if(!pError)
 			{
+				mPacketLock.lock();
 				mPackets.push(mReceivingPacket);
+				mPacketLock.unlock();
 
 				async_read(mReceivingPacket,
-					boost::bind(&Session::HandleRead, this,
-					boost::asio::placeholders::error,
-					shared_from_this()));
+					boost::bind(&Session::HandleRead, shared_from_this(),
+					boost::asio::placeholders::error));
 			}
 			else
 			{
@@ -126,7 +135,7 @@ namespace Skyrim
 			}
 		}
 		//---------------------------------------------------------------------
-		void Session::HandleWrite(const boost::system::error_code& pError, Session::pointer pMe)
+		void Session::HandleWrite(const boost::system::error_code& pError)
 		{
 			if(!pError)
 			{
@@ -134,7 +143,7 @@ namespace Skyrim
 				if (!mToSend.empty())
 				{
 					async_write(mToSend.front(),
-						boost::bind(&Session::HandleWrite, this, boost::asio::placeholders::error, shared_from_this()));
+						boost::bind(&Session::HandleWrite, shared_from_this(), boost::asio::placeholders::error));
 				}
 			}
 			else
@@ -186,6 +195,16 @@ namespace Skyrim
 			}
 		}
 		//---------------------------------------------------------------------
+		void Session::Add(Session::pointer pPlayer)
+		{
+			auto itor = std::find(mInRange.begin(), mInRange.end(), pPlayer);
+			if(itor == mInRange.end())
+			{
+				SendSpawnPlayer(pPlayer);
+				mInRange.push_back(pPlayer);
+			}
+		}
+		//---------------------------------------------------------------------
 		void Session::DispatchInRange(Packet& data)
 		{
 			auto end = mInRange.end();
@@ -197,7 +216,7 @@ namespace Skyrim
 		//---------------------------------------------------------------------
 		unsigned int Session::GetId()
 		{
-			return mAccount._id;
+			return mAccount.Id;
 		}
 		//---------------------------------------------------------------------
 	}

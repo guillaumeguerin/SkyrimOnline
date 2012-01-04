@@ -116,9 +116,13 @@ namespace SkyrimOnline
 				float b = mNext.posY - mPrevious.posY;
 				float c = mNext.posZ - mPrevious.posZ;
 				float speed = sqrt(a*a + b*b + c*c)/mNext.elapsed;
-				ObjectReference::TranslateTo((TESObjectREFR*)mMe->actor(),mNext.posX, mNext.posY, mNext.posZ, mNext.rotX, mNext.rotY, mNext.rotZ,speed, 200);
 				if(mMount)
+				{
 					ObjectReference::TranslateTo((TESObjectREFR*)mMount->actor(),mNext.posX, mNext.posY, mNext.posZ, mNext.rotX, mNext.rotY, mNext.rotZ,speed, 200);
+					ObjectReference::TranslateTo((TESObjectREFR*)mMe->actor(),mNext.posX, mNext.posY-128, mNext.posZ, mNext.rotX, mNext.rotY, mNext.rotZ,speed, 200);
+				}
+				else
+					ObjectReference::TranslateTo((TESObjectREFR*)mMe->actor(),mNext.posX, mNext.posY, mNext.posZ, mNext.rotX, mNext.rotY, mNext.rotZ,speed, 200);
 			}
 
 			//ObjectReference::PlayAnimation((TESObjectREFR*)mMe->actor(), "Walk");

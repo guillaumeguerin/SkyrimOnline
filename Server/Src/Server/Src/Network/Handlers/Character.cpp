@@ -30,9 +30,9 @@ namespace Skyrim
 			data.Opcode = SMSG_PLAYER_SPAWN;
 
 			data.Push(pPlayer->GetId());
-			data.Push(pPlayer->GetPlayer().race());
-			data.Push(pPlayer->GetPlayer().sex());
-			data.Push(pPlayer->GetPlayer().level());
+			data.Push(pPlayer->GetPlayer().GetRace());
+			data.Push(pPlayer->GetPlayer().GetSex());
+			data.Push(pPlayer->GetPlayer().GetLevel());
 			Write(data);
 
 			SendMount(pPlayer);

@@ -18,13 +18,16 @@ namespace Skyrim{
 	{
 		struct EventEmitter
 		{
-			void Add(std::shared_ptr<EventListener> pListener);
-			void Remove(std::shared_ptr<EventListener> pListener);
-			void Dispatch(std::shared_ptr<Event> pEvent);
+			EventEmitter();
+			virtual ~EventEmitter();
+
+			void Add(EventListener::pointer pListener);
+			void Remove(EventListener::pointer pListener);
+			void Dispatch(Event::pointer pEvent);
 
 		private:
 
-			std::vector<std::shared_ptr<EventListener>> mListeners;
+			std::vector<EventListener::pointer> mListeners;
 			boost::mutex mGuard;
 		};
 	}

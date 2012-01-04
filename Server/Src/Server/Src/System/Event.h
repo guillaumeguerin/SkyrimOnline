@@ -10,12 +10,17 @@ THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEP
 
 #pragma once
 
+#include <System/Reference.h>
+
 namespace Skyrim{
 	namespace System
 	{
-		struct Event
+		struct Event : public boost::enable_shared_from_this<Event>
 		{
-			typedef std::shared_ptr<Event> pointer;
+			typedef boost::shared_ptr<Event> pointer;
+
+			Event(){}
+			virtual ~Event(){}
 
 			enum Type{
 				DATAOBJECT_LOAD,

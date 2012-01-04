@@ -36,6 +36,7 @@ namespace Skyrim{
 		//---------------------------------------------------------------------
 		void DBWorkQueue::Push(std::shared_ptr<DAO::IDAO> pObject)
 		{
+			boost::mutex::scoped_lock lock(mLock);
 			mJobs.push(pObject);
 		}
 		//---------------------------------------------------------------------
@@ -43,19 +44,34 @@ namespace Skyrim{
 		{
 			while(1)
 			{
-				std::shared_ptr<DAO::IDAO> task;
-				if(mJobs.try_pop(task))
+				try
 				{
-					switch(task->type())
+					mLock.lock();
+
+					if(!mJobs.empty())
 					{
-					case DAO::IDAO::LOAD:
-						task->Load(*pDatabase);break;
-					case DAO::IDAO::SAVE:
-						task->Save(*pDatabase);break;
+						std::shared_ptr<DAO::IDAO> task = mJobs.front();
+						mJobs.pop();
+
+						mLock.unlock();
+
+						switch(task->type())
+						{
+						case DAO::IDAO::LOAD:
+							task->Load(*pDatabase);break;
+						case DAO::IDAO::SAVE:
+							task->Save(*pDatabase);break;
+						}
+					}
+					else
+					{
+						mLock.unlock();
+						boost::this_thread::sleep(boost::posix_time::milliseconds(10));
 					}
 				}
-				else
-					boost::this_thread::sleep(boost::posix_time::milliseconds(10));
+				catch(...)
+				{
+				}
 			}
 		}
 		//---------------------------------------------------------------------

@@ -19,27 +19,59 @@ namespace Skyrim
 	{
 		//---------------------------------------------------------------------
 		Server::Server(unsigned short pPort)
-			:mAcceptor(*new boost::asio::io_service, tcp::endpoint(tcp::v4(), pPort)), mDBWorkQueue(4), mStarted(false), mID(0),mMaxConnections(0)
+			:mAcceptor(*new boost::asio::io_service, tcp::endpoint(tcp::v4(), pPort)),
+			mStarted(false), mID(0),mMaxConnections(0)
 		{
 			System::Log::GetInstance()->Print("                            Skyrim Online         ");
 			System::Log::GetInstance()->Print("Memory model : " + std::to_string((unsigned long long)sizeof(void*) * 8) + " bits				   ");
-			System::Log::GetInstance()->Print("Running with : - 4 Database threads				               ");
+		}
+		//---------------------------------------------------------------------
+		void Server::Scale()
+		{
+			/**
+			 * 1 database thread for 3 event threads if enough hardware threads
+			 * 1 network thread for ever !!!!!!
+			 */
+			unsigned int logicThreads = boost::thread::hardware_concurrency();
+			unsigned int dbThreads = 1;
+			unsigned int coreThreads = 1;
+			if(logicThreads > 3)
+			{
+				dbThreads = (float)logicThreads / 3.f + 1;
+				coreThreads = logicThreads - dbThreads;
+			}
+			mDBWorkQueue = new System::DBWorkQueue(dbThreads);
+			mWorkQueue   = new System::WorkQueue(coreThreads);
+			new boost::thread([this]() -> void{mAcceptor.get_io_service().run();});
+
+			System::Log::GetInstance()->Print("Running with : - " + std::to_string((unsigned long long)dbThreads) + " Database thread(s)				               ");
 			System::Log::GetInstance()->Print("               - 1 Network thread                                ");
-			System::Log::GetInstance()->Print("               - 1 Event thread                                  ");
+			System::Log::GetInstance()->Print("               - " + std::to_string((unsigned long long)coreThreads) + " Logic thread(s)                                  ");
 			System::Log::GetInstance()->Print("");
 		}
 		//---------------------------------------------------------------------
 		void Server::Start()
 		{
-			System::Log::GetInstance()->Print("Waiting for connections.");
+			// Instanciate the plugins
+			Script::PluginManager::GetInstance();
+
 			Session::Setup();
 
-			AddShard(new Game::World("Skyrim Online English", true));
-			AddShard(new Game::World("Skyrim Online Others", true));
+			AddShard(new Game::World("Skyrim Online English", true, this));
+			AddShard(new Game::World("Skyrim Online Others", true, this));
 
-			new boost::thread(boost::bind(&boost::asio::io_service::run, &mAcceptor.get_io_service()));
 			Accept();
+			Scale();
+
+			auto end = mWorlds.end();
+			for(auto itor = mWorlds.begin(); itor != end; ++itor)
+			{
+				itor->second->Start();
+			}
+
+			System::Log::GetInstance()->Print("Waiting for connections.");
 			mStarted = true;
+
 			Run();
 		}
 		//---------------------------------------------------------------------
@@ -84,12 +116,17 @@ namespace Skyrim
 		//---------------------------------------------------------------------
 		System::DBWorkQueue* Server::GetDatabaseWorkQueue()
 		{
-			return &mDBWorkQueue;
+			return mDBWorkQueue;
+		}
+		//---------------------------------------------------------------------
+		System::WorkQueue* Server::GetWorkQueue()
+		{
+			return mWorkQueue;
 		}
 		//---------------------------------------------------------------------
 		void Server::Accept()
 		{
-			Session::pointer session = std::make_shared<Session>(mAcceptor.get_io_service(), this);
+			Session::pointer session = boost::make_shared<Session>(mAcceptor.get_io_service(), this);
 			mAcceptor.async_accept(session->GetSocket(),
 				boost::bind(&Server::HandleAccept, this,
 				session, boost::asio::placeholders::error));
@@ -101,7 +138,9 @@ namespace Skyrim
 
 			auto itor = std::find(mSessions.begin(), mSessions.end(), pPlayer);
 			if(itor != mSessions.end())
+			{
 				mSessions.erase(itor);
+			}
 			else
 			{
 				pPlayer->GetWorld()->Remove(pPlayer);
@@ -171,13 +210,22 @@ namespace Skyrim
 			auto world = mWorlds[pWorldIndex];
 			if(world)
 			{
-				world->Add(pPlayer);
+				reinterpret_cast<Game::World*>(world)->Add(pPlayer);
 			}
 		}
 		//---------------------------------------------------------------------
-		void Server::AddShard(Game::World* pWorld)
+		void Server::AddShard(Game::IWorld* pWorld)
 		{
+			Script::PluginManager::GetInstance().AddShard(pWorld);
 			mWorlds[pWorld->GetName()] = pWorld;
+		}
+		//---------------------------------------------------------------------
+		void Server::OnEvent(std::shared_ptr<System::Event> pEvent)
+		{
+			if(!mStarted)
+			{
+				mGuard.unlock();
+			}
 		}
 		//---------------------------------------------------------------------
 	}

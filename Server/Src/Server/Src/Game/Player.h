@@ -27,9 +27,9 @@ namespace Skyrim{
 			Player();
 			~Player();
 
-			unsigned int race();
-			unsigned int level();
-			unsigned int sex();
+			unsigned int GetRace();
+			unsigned int GetLevel();
+			unsigned int GetSex();
 			bool HasMount();
 			Mount* GetMount();
 			void SetMount(unsigned int pMountID);

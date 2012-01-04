@@ -46,11 +46,11 @@ namespace Skyrim
 				else
 				{
 					std::ostringstream os;
-					if(mAccount._level == 10)
+					if(mAccount.Level == 10)
 					{
 						os << "#00FFFF";
 					}
-					os << "[" << mAccount._nicename << "]#FFFFFF says : " << pData.String(0);
+					os << "[" << mAccount.Nicename << "]#FFFFFF says : " << pData.String(0);
 
 					Packet packet;
 					packet.Opcode = SMSG_CHAT;
@@ -76,16 +76,14 @@ namespace Skyrim
 			{
 				if(GetDistance(pPlayer) < 10000)
 				{
-					SendSpawnPlayer(pPlayer);
-					mInRange.push_back(pPlayer);
+					Add(pPlayer);
 				}
 			}
 			else
 			{
 				if(GetDistance(pPlayer) > 15000)
 				{
-					SendRemove(pPlayer);
-					mInRange.erase(itor);
+					Remove(pPlayer);
 				}
 				else
 				{

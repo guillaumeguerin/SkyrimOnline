@@ -18,16 +18,16 @@ namespace Skyrim{
 		public:
 
 			Account()
-				:_banned(false),_id(0),_level(0)
+				:Banned(false),Id(0),Level(0)
 			{
 			}
 
-			bool _banned;
-			std::string _pass;
-			std::string _user;
-			std::string _nicename;
-			uint32_t _level;
-			uint32_t _id;
+			bool Banned;
+			std::string Pass;
+			std::string User;
+			std::string Nicename;
+			uint32_t Level;
+			uint32_t Id;
 		};
 	}
 }

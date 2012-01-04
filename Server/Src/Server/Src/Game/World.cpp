@@ -11,44 +11,44 @@ THE LICENSOR GRANTS YOU THE RIGHTS CONTAINED HERE IN CONSIDERATION OF YOUR ACCEP
 #include "stdafx.h"
 #include "World.h"
 #include <Network/Packet.h>
+#include <Network/Server.h>
 
 namespace Skyrim{
 	namespace Game
 	{
 		//---------------------------------------------------------------------
-		World::World(const std::string& pName, bool pPersistant)
-			:mName(pName), mWorldThread(nullptr), mPersistant(pPersistant)
+		World::World(const std::string& pName, bool pPersistant, Network::Server* pServer)
+			:mName(pName), mPersistant(pPersistant), mServer(pServer), mScheduled(false)
 		{
 		}
 		//---------------------------------------------------------------------
-		void World::Run()
+		void World::Work()
 		{
-			while(1)
+			float elapsed = (float)mTimer.elapsed();
+			if(mSessions.size() > 0)
 			{
-				float elapsed = (float)mTimer.elapsed();
-				if(mSessions.size() > 0)
-				{
-					mTimeManager.Update(elapsed);
+				mTimeManager.Update(elapsed);
 
-					mTimer.restart();
-					mGuard.lock();
-					auto sessionCopy(mSessions);
-					mGuard.unlock();
+				mTimer.restart();
+				mGuard.lock();
+				auto sessionCopy(mSessions);
+				mGuard.unlock();
 
-					std::for_each(sessionCopy.begin(), sessionCopy.end(),
-						[this](Network::Session::pointer pSession)
-					{
-						pSession->Run();
-					});
-				}
-				else if(elapsed > 120)
+				std::for_each(sessionCopy.begin(), sessionCopy.end(),
+					[this](Network::Session::pointer pSession)
 				{
-					boost::mutex::scoped_lock(mReleaseGuard);
-					delete mWorldThread;
-					mWorldThread = nullptr;
-					return;
-				}
+					pSession->Run();
+				});
 			}
+			else if(elapsed > 120)
+			{
+				mScheduled = false;
+				return;
+			}
+
+			mServer->GetWorkQueue()->Add(this);
+
+			boost::this_thread::yield();
 		}
 		//---------------------------------------------------------------------
 		void World::Add(Network::Session::pointer pPlayer)
@@ -59,10 +59,7 @@ namespace Skyrim{
 			}
 			{
 				boost::mutex::scoped_lock(mReleaseGuard);
-				if(mWorldThread == nullptr)
-				{
-					mWorldThread = new boost::thread(std::bind(&World::Run,this));
-				}
+				Start();
 			}
 
 			pPlayer->SetWorld(this);
@@ -81,13 +78,15 @@ namespace Skyrim{
 			boost::mutex::scoped_lock lock(mGuard);
 			auto itor = std::find(mSessions.begin(), mSessions.end(), pPlayer);
 			if(itor != mSessions.end())
-				mSessions.erase(itor);
-
-			std::for_each(mSessions.begin(), mSessions.end(),
-				[this,&pPlayer](Network::Session::pointer pSession)
 			{
-				pSession->Remove(pPlayer);
-			});
+				std::for_each(mSessions.begin(), mSessions.end(),
+					[this,&pPlayer](Network::Session::pointer pSession)
+				{
+					pSession->Remove(pPlayer);
+				});
+
+				mSessions.erase(itor);
+			}
 		}
 		//---------------------------------------------------------------------
 		void World::DispatchPlayerMoveAndLook(Network::Session::pointer pPlayer)
@@ -131,7 +130,7 @@ namespace Skyrim{
 		//---------------------------------------------------------------------
 		bool World::IsMarkedForDelete()
 		{
-			return (mWorldThread == nullptr && mTimer.elapsed() >= 180 && !mPersistant);
+			return (mTimer.elapsed() >= 180 && !mPersistant);
 		}
 		//---------------------------------------------------------------------
 		std::string World::GetName()
@@ -141,7 +140,39 @@ namespace Skyrim{
 		//---------------------------------------------------------------------
 		unsigned int World::Count()
 		{
-			return mSessions.size();
+			return static_cast<unsigned int>(mSessions.size());
+		}
+		//---------------------------------------------------------------------
+		void World::Start()
+		{
+			if(!mScheduled)
+			{
+				mScheduled = true;
+				mServer->GetWorkQueue()->Add(this);
+			}
+		}
+		//---------------------------------------------------------------------
+		void World::CreateJava()
+		{
+			auto javaclass = Script::PluginManager::GetInstance().GetJavaManager().GetJNI()->FindClass("com/skyrimonline/game/World");
+			if(javaclass)
+			{
+				auto constructor = Script::PluginManager::GetInstance().GetJavaManager().GetJNI()->GetMethodID(javaclass, "<init>", "()V");
+				if(constructor)
+				{
+					mJavaObject = Script::PluginManager::GetInstance().GetJavaManager().GetJNI()->NewObject(javaclass,constructor);
+					if(mJavaObject)
+					{
+						auto func = Script::PluginManager::GetInstance().GetJavaManager().GetJNI()->GetMethodID(javaclass, "setPointer", "(J)V");
+						if(func)
+							Script::PluginManager::GetInstance().GetJavaManager().GetJNI()->CallVoidMethod(mJavaObject, func, (jlong)this);
+					}
+				}
+				else
+					System::Log::GetInstance()->Error("com.skyrimonline.game.world constructor not found !");
+			}
+			else
+				System::Log::GetInstance()->Error("com.skyrimonline.game.world not found !");
 		}
 		//---------------------------------------------------------------------
 	}
