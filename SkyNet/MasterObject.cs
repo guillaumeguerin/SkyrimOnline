@@ -9,7 +9,7 @@ namespace SkyNet
     /// <summary>
     /// BOW DOWN TO THE ALMIGHTY GodInheritance OBJECT! :D
     /// </summary>
-    public class MasterObject
+    public abstract class MasterObject
     {
         internal Dictionary<object, object> _inDict = new Dictionary<object, object>();
         public object this[object Key]
@@ -17,6 +17,24 @@ namespace SkyNet
             get
             {
                 return _inDict.ContainsKey(Key) ? _inDict[Key] : null;
+            }
+            set
+            {
+                if (_inDict.ContainsKey(Key))
+                    _inDict[Key] = value;
+                else
+                    _inDict.Add(Key, value);
+            }
+        }
+    }
+    public abstract class MasterObject<Key, Value>
+    {
+        internal Dictionary<Key, Value> _inDict = new Dictionary<Key, Value>();
+        public Value this[Key Key]
+        {
+            get
+            {
+                return _inDict.ContainsKey(Key) ? _inDict[Key] : default(Value);
             }
             set
             {

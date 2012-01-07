@@ -55,7 +55,11 @@ namespace SkyNet.Economy.Auctions
             _time = (ulong)DateTime.Now.Add(TimeSpan.FromHours(PresetTimes[Time])).Ticks;
             _minBid = _currentBid = MinBid;
         }
-        public void DoSQL(MySqlConnection Connection)
+        public void Write(MySqlConnection Connection)
+        {
+
+        }
+        public void Read(MySqlConnection Connection)
         {
 
         }

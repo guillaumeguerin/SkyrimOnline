@@ -14,7 +14,10 @@ namespace SkyNet.Extension
         static CodeDomProvider dom = CodeDomProvider.CreateProvider("csharp");
         static CompilerParameters domParams = new CompilerParameters(new[]
             {
-                "SkyNet.dll"
+                "SkyNet.exe",
+                "System.dll",
+                "System.Core.dll",
+                "System.Data.dll",
             });
         static SuperAssembly()
         {
@@ -58,19 +61,31 @@ namespace SkyNet.Extension
         }
         public Dictionary<string, CompilerResults> LoadAll()
         {
-            string[] Files = Directory.GetFiles("./Code");
+            string[] Files = Directory.GetFiles(".\\Plugins", "*.cs", SearchOption.AllDirectories);
             Dictionary<string, CompilerResults> r = new Dictionary<string, CompilerResults>();
             CompilerResults _r = null;
             lock(_classes)
             {
                 foreach (string s in Files)
                     r.Add(s, _r = Load(s));
+                Files = Directory.GetFiles(".\\Plugins", "*.dll", SearchOption.AllDirectories);
+                Assembly a;
+                //Load precompiled assemblies
+                foreach (string s in Files)
+                {
+                    Load(a = Assembly.LoadFile(s));
+                    r.Add(s, new CompilerResults(null)
+                        {
+                            CompiledAssembly = a,
+                            PathToAssembly = s
+                        });
+                }
             }
             return r;
         }
         public CompilerResults Load(string File)
         {
-            CompilerResults res = dom.CompileAssemblyFromSource(domParams, new[] { File });
+            CompilerResults res = dom.CompileAssemblyFromFile(domParams, new[] { File });
             if (!res.Errors.HasErrors)
             {
                 Assembly a = res.CompiledAssembly;
@@ -80,12 +95,19 @@ namespace SkyNet.Extension
             }
             return res;
         }
+        public void Load(Assembly Assembly)
+        {
+            Type[] t = Assembly.GetTypes();
+            foreach (Type T in t)
+                this[T.FullName] = new SuperClass(T, Assembly);
+        }
         public SuperAssembly()
         {
             Assembly a = Assembly.GetCallingAssembly();
             Type[] t = a.GetTypes();
             foreach (Type T in t)
-                this[T.FullName] = new SuperClass(T, a);
+                if (T.Namespace != "SkyNet.Extension")
+                    this[T.FullName] = new SuperClass(T, a);
         }
         public object Call(string Name, object[] Parameters = null)
         {
@@ -174,9 +196,10 @@ namespace SkyNet.Extension
         public SuperClass(Type T, Assembly Parent)
         {
             MethodInfo[] m = T.GetMethods(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            _reference = Parent.CreateInstance(_fullName = T.FullName);
+            if (T.GetConstructor(new Type[0]) != null)
+                _reference = Parent.CreateInstance(_fullName = T.FullName);
             foreach (MethodInfo mi in m)
-                _methods.Add(mi.Name, new SuperMethod(mi, _reference));
+                this[mi.Name] = new SuperMethod(mi, _reference);
             _name = T.Name;
         }
     }

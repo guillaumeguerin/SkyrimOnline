@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using SkyNet;
 using SkyNet.Economy.Auctions;
+using SkyNet.Extension;
+using SkyNet.Math;
+using SkyNet.SkyrimOnline.Game;
 
 namespace SkyNet
 {
@@ -11,8 +14,7 @@ namespace SkyNet
     {
         internal static void Main(string[] args)
         {
-            API._auctionData.Add(new AuctionEntry(0,0,0,4));
-            AuctionEntry[] a = API.GetAuctionsMatching("rt=4");
+
         }
     }
 }

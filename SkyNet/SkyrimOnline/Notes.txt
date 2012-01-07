@@ -1,0 +1,9 @@
+﻿This is an attempt to convert the Skyrim Online code to C#. 
+Started because the Java system in the SO server is unneccesary
+and causes build issues
+
+May end up making a base entity class which includes;
+
+Vector3 _position, _rotation
+
+Which could make things tidier, though performance impact of inheritance is unknown

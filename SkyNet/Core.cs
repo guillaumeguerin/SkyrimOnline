@@ -5,11 +5,30 @@ using System.Text;
 using SkyNet.Economy.Auctions;
 using System.Threading;
 using SkyNet.Items;
+using System.Diagnostics;
+using SkyNet.SkyrimOnline.Game;
+using SkyNet.SkyrimOnline.Network;
 
 namespace SkyNet
 {
+    public delegate void AddShardHandler(Server S, World W);
+    public delegate void UserLoginHandler(Server S, Session Session, UserData Data);
     public static class API
     {
+        public static event AddShardHandler AddShard;
+        public static event UserLoginHandler UserLogin;
+
+        internal static void OnAddShard(Server S, World W)
+        {
+            AddShard(S, W);
+        }
+        internal static void OnUserLogin(Server S, Session Session, UserData Data)
+        {
+            UserLogin(S, Session, Data);
+        }
+
+        internal static Process
+            _this;
         static ulong
             _userID,
             _auctionID;
@@ -25,6 +44,11 @@ namespace SkyNet
         internal static List<UserData> _userData = new List<UserData>();
         internal static List<AuctionEntry> _auctionData = new List<AuctionEntry>();
         internal static List<ItemInstance> _itemInstances = new List<ItemInstance>();
+
+        public static Process This
+        {
+            get { return _this; }
+        }
 
         public static UserData GetUser(ulong Data)
         {
@@ -64,6 +88,9 @@ namespace SkyNet
         {
             _auctionCheck = new Thread(AuctionCheck);
             _auctionCheck.Start();
+            _this = Process.GetCurrentProcess();
+            AddShard += (w, o) => Console.WriteLine("World added: {0}", o._name);
+            UserLogin += (s, sess, dat) => Console.WriteLine("User logged in: {0}", dat._name);
         }
 
         static void AuctionCheck()

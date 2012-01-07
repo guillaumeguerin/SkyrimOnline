@@ -26,3 +26,11 @@ SkyNet/bin/*
 SkyNet/obj/*
 SkyNet_Client/obj/*
 Test_Sharp/obj/*
+Debug/*
+Gen2Host/obj/*
+Gen2Injection/Debug/*
+SkyNet_Client/bin*
+Obj/*
+Gen2Injector/bin/Debug/*
+Gen2Injector/obj/*
+*.cd

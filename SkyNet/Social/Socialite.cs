@@ -10,5 +10,10 @@ namespace SkyNet.Social
         internal ulong 
             _socialID,
             _userID;
+        List<uint> _achievements = new List<uint>();
+        public Socialite()
+        {
+
+        }
     }
 }
